@@ -1,4 +1,5 @@
-﻿using static System.Console;
+﻿using System;
+using static System.Console;
 
 namespace Team01DungeonGame
 {
@@ -14,7 +15,7 @@ namespace Team01DungeonGame
         enum Scene
         {
             main, status, inventory, market, rest,
-            equipment, buy, sell, kill
+            equipment, buy, sell, kill, battle, Skill
         }
 
         private Character _player;
@@ -471,7 +472,78 @@ namespace Team01DungeonGame
 			return scene;
 		}
 
-		private int CheckValidInput(int min, int max)
+        private Scene BattleScene()
+        {
+            Scene scene = Scene.main;
+            Clear();
+
+            PrintColoredText(" Bettle!!");
+            WriteLine();
+            WriteLine(" Lv.6 대포미니언");
+            WriteLine(" Lv.4 공허충");
+            WriteLine();
+            WriteLine(" [내정보]");
+            Write($" {_player.Name}");
+            PrintwithColoredText(" ", (_player.PrintJob()));
+
+            int bonusHP = GetSumBonusString("HP");
+            Console.WriteLine(" HP " + _player.HP + "/" + _player.MAX_HP);
+            int bonusMP = GetSumBonusString("MP");
+            WriteLine(" MP ");
+
+            WriteLine();
+            WriteLine(" 1. 공격");
+            WriteLine(" 2. 나가기");
+            WriteLine();
+            WriteLine(" 원하시는 행동을 입력해주세요.");
+
+            switch (CheckValidInput(1, 2))
+            {
+                case 1:
+                    scene = Scene.battle;
+                    break;
+                case 2:
+                    scene = Scene.Skill;
+                    break;
+
+            }
+            return scene;
+        }
+
+
+        private Scene SkillScene()
+        {
+            Scene scene = Scene.main;
+            Clear();
+
+            return scene;
+        }
+
+        private int GetSumBonusString(string propertyName)
+        {
+            int sum = 0;
+            for (int i = 0; i < _player.Inventory.Count; i++)
+            {
+                if (_items[i].IsEquipped)
+                {
+                    // 리플렉션을 사용하여 현재 아이템의 propertyName 속성 값을 가져옵니다.
+                    var propertyInfo = _player.Inventory[i].GetType().GetProperty(propertyName);
+                    if (propertyInfo != null)
+                    {
+                        // 속성 값이 int 타입이라고 가정하고 값을 가져옵니다.
+                        int value = (int)propertyInfo.GetValue(_player.Inventory[i], null);
+                        sum += value;
+                    }
+                }
+            }
+            return sum;
+        }
+
+
+
+
+
+        private int CheckValidInput(int min, int max)
 		{
 			while (true)
 			{

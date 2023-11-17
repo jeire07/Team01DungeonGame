@@ -12,13 +12,14 @@ namespace Team01DungeonGame
 		public int Atk { get; set; }
 		public int Def { get; set; }
 		public int HP { get; set; }
-		public int Gold { get; set; }
+        public int MAX_HP { get; set; }
+        public int Gold { get; set; }
         public bool IsAlive { get; set; }
         public List<Item> Inventory { get; }
 		public Item[] Equips { get; }
 
         public Character(string name, JobType job = JobType.human, int level = 1,
-			int atk = 10, int def = 5, int hp = 100, int gold = 1500)
+			int atk = 10, int def = 5, int hp = 100, int max_hp = 100, int gold = 1500)
 		{
 			Name = name;
 			Job = job;
@@ -26,7 +27,8 @@ namespace Team01DungeonGame
 			Atk = atk;
 			Def = def;
 			HP = hp;
-			Gold = gold;
+            MAX_HP = max_hp;
+            Gold = gold;
 			Inventory = new List<Item>(20);
 			Item[] Equips = new Item[9];
 		}
