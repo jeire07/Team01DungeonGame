@@ -1,29 +1,30 @@
-﻿using System;
-using static System.Console;
+﻿using static System.Console;
 
 namespace Team01DungeonGame
 {
     public class TextGame
     {
-        enum GameScene
+        enum Scene
         {
-            main, status, inventory, market, rest,
-            equipment, buy, sell, kill, battle, Skill
+            main, status, inventory, market, rest, dungeon, stagePick,
+            equipment, buy, sell, kill
         }
+
+        private Scene _scene;
 
         private Character _player;
         private Character _merchant;
+
         private List<Item> _items;
 
-        private GameScene _scene;
+        private Battle _battle;
 
         public void PlayText()
         {
             _scene = 0;
-            _player = new Character("username", JobType.human);
             IntroScene();
             GameDataSetting();
-            while (_scene != GameScene.kill)
+            while (_scene != Scene.kill)
             {
                 _scene = SceneManager(_scene);
             }
@@ -32,7 +33,8 @@ namespace Team01DungeonGame
         private void IntroScene()
         {
             bool ValidName = false;
-            string userInput = "username";
+            string userName = "username";
+            JobType userJob = JobType.human;
 
             Clear();
 
@@ -44,8 +46,8 @@ namespace Team01DungeonGame
             {
                 WriteLine(" 당신의 이름은 무엇입니까?");
                 Write(" ");
-                userInput = ReadLine() ?? "jeire";
-                if (userInput.Length < 9)
+                userName = ReadLine() ?? "jeire";
+                if (userName.Length < 9)
                 {
                     ValidName = true;
                 }
@@ -57,7 +59,6 @@ namespace Team01DungeonGame
                     continue;
                 }
             }
-            _player.Name = userInput;
 
             WriteLine(" 어떤 직업을 하실랍니까?");
             WriteLine();
@@ -67,21 +68,8 @@ namespace Team01DungeonGame
             WriteLine();
             WriteLine(" 원하시는 직업을 골라주세요");
 
-            switch ((JobType)CheckValidInput(1, 3) - 1)
-            {
-                case JobType.human:
-                    _player.Job = JobType.human;
-                    break;
-                case JobType.warrior:
-                    _player.Job = JobType.warrior;
-                    break;
-                case JobType.mage:
-                    _player.Job = JobType.mage;
-                    break;
-                default:
-                    _player.Job = JobType.human;
-                    break;
-            }
+            userJob = (JobType)CheckValidInput(1, 3) - 1;
+            _player = new Character(userName, userJob);
         }
 
         private void GameDataSetting()
@@ -123,49 +111,49 @@ namespace Team01DungeonGame
             _merchant.AddItem(_items[9]);
         }
 
-        private GameScene SceneManager(GameScene scene)
+        private Scene SceneManager(Scene scene)
         {
             switch (scene)
             {
-                case GameScene.main:
+                case Scene.main:
                     scene = MainScene();
                     break;
-                case GameScene.status:
+                case Scene.status:
                     scene = StatusScene();
                     break;
-                case GameScene.inventory:
+                case Scene.inventory:
                     scene = InventoryScene();
                     break;
-                case GameScene.market:
+                case Scene.market:
                     scene = MarketScene();
                     break;
-                case GameScene.rest:
+                case Scene.rest:
                     scene = RestScene();
                     break;
-                case GameScene.battle:
-                    scene = RunBattleScene();
+                case Scene.dungeon:
+                    scene = DungeonScene();
                     break;
-                //case Scene.stagePick:
-                //    StagePickScene();
-                //    break;
-                case GameScene.equipment:
+                case Scene.stagePick:
+                    StagePickScene();
+                    break;
+                case Scene.equipment:
                     scene = EquipmentScene();
                     break;
-                case GameScene.buy:
+                case Scene.buy:
                     scene = BuyScene();
                     break;
-                case GameScene.sell:
+                case Scene.sell:
                     scene = SellScene();
                     break;
-                case GameScene.kill:
+                case Scene.kill:
                     break;
             }
             return scene;
         }
 
-        private GameScene MainScene()
+        private Scene MainScene()
         {
-            GameScene scene = GameScene.main;
+            Scene scene = Scene.main;
             Clear();
 
             WriteLine();
@@ -183,33 +171,33 @@ namespace Team01DungeonGame
             switch (CheckValidInput(1, 9))
             {
                 case 1:
-                    scene = GameScene.status;
+                    scene = Scene.status;
                     break;
                 case 2:
-                    scene = GameScene.inventory;
+                    scene = Scene.inventory;
                     break;
                 case 3:
-                    scene = GameScene.market;
+                    scene = Scene.market;
                     break;
                 case 4:
-                    scene = GameScene.rest;
+                    scene = Scene.rest;
                     break;
                 case 5:
-                    scene = GameScene.battle;
+                    scene = Scene.dungeon;
                     break;
                 case 9:
-                    scene = GameScene.kill;
+                    scene = Scene.kill;
                     break;
                 default:
-                    scene = GameScene.main;
+                    scene = Scene.main;
                     break;
             }
             return scene;
         }
 
-        private GameScene StatusScene()
+        private Scene StatusScene()
         {
-            GameScene scene = GameScene.main;
+            Scene scene = Scene.main;
             Clear();
 
             WriteLine();
@@ -222,14 +210,18 @@ namespace Team01DungeonGame
             WriteLine($" 이  름 : {_player.Name}");
             PrintwithColoredText(" 직  업 : ", _player.PrintJob());
 
-            int bonusAtk = Item.AtkBonus;
-            int bonusDef = Item.DefBonus;
-            int bonusHP = Item.HPBonus;
-            PrintwithColoredText(" 공격력 : ", (_player.Atk + bonusAtk).ToString(), bonusAtk >= 0 ? $" (+{bonusAtk})" : $" ({bonusAtk})");
-            PrintwithColoredText(" 방어력 : ", (_player.Def + bonusDef).ToString(), bonusDef >= 0 ? $" (+{bonusDef})" : $" ({bonusDef})");
-            PrintwithColoredText(" 체력   : ", (_player.HP + bonusHP).ToString(), bonusHP >= 0 ? $" (+{bonusHP})" : $" ({bonusHP})");
-            PrintwithColoredText(" Gold   : ", _player.Gold.ToString(), "G");
+            string bonusAtk = Item.AtkBonus >= 0 ? $" (+{Item.AtkBonus})" : $" ({Item.AtkBonus})";
+            string bonusDef = Item.DefBonus >= 0 ? $" (+{Item.DefBonus})" : $" ({Item.DefBonus})";
+            string bonusHP = Item.HPBonus >= 0 ? $" (+{Item.HPBonus})" : $" ({Item.HPBonus})";
+            string bonusMP = Item.MPBonus >= 0 ? $" (+{Item.MPBonus})" : $" ({Item.MPBonus})";
 
+            PrintwithColoredText(" 공격력 : ", (_player.Atk + Item.AtkBonus).ToString(), bonusAtk);
+            PrintwithColoredText(" 방어력 : ", (_player.Def + Item.DefBonus).ToString(), bonusDef);
+            PrintwithColoredText(" 체력   : ", $"{_player.HP + Item.HPBonus} / {_player.MaxHP + Item.HPBonus}", bonusHP);
+            PrintwithColoredText(" 마력   : ", $"{_player.MP + Item.MPBonus} / {_player.MaxMP + Item.MPBonus}", bonusMP);
+
+            PrintwithColoredText(" Gold   : ", _player.Gold.ToString(), "G");
+            
             WriteLine();
             WriteLine(" 0. 나가기");
             WriteLine();
@@ -238,15 +230,15 @@ namespace Team01DungeonGame
             switch (CheckValidInput(0, 0))
             {
                 case 0:
-                    scene = GameScene.main;
+                    scene = Scene.main;
                     break;
             }
             return scene;
         }
 
-        private GameScene InventoryScene()
+        private Scene InventoryScene()
         {
-            GameScene scene = GameScene.main;
+            Scene scene = Scene.main;
             Clear();
 
             WriteLine();
@@ -270,18 +262,18 @@ namespace Team01DungeonGame
             switch (CheckValidInput(0, inventoryCount))
             {
                 case 0:
-                    scene = GameScene.main;
+                    scene = Scene.main;
                     break;
                 case 1:
-                    scene = GameScene.equipment;
+                    scene = Scene.equipment;
                     break;
             }
             return scene;
         }
 
-        private GameScene EquipmentScene()
+        private Scene EquipmentScene()
         {
-            GameScene scene = GameScene.main;
+            Scene scene = Scene.main;
             Clear();
 
             WriteLine();
@@ -305,20 +297,20 @@ namespace Team01DungeonGame
             switch (input)
             {
                 case 0:
-                    scene = GameScene.inventory;
+                    scene = Scene.inventory;
                     break;
                 default:
                     _player.ToggleEquipStatus(input - 1);
 
-                    scene = GameScene.equipment;
+                    scene = Scene.equipment;
                     break;
             }
             return scene;
         }
 
-        private GameScene MarketScene()
+        private Scene MarketScene()
         {
-            GameScene scene = GameScene.main;
+            Scene scene = Scene.main;
             Clear();
 
             WriteLine();
@@ -337,21 +329,21 @@ namespace Team01DungeonGame
             switch (CheckValidInput(0, 2))
             {
                 case 0:
-                    scene = GameScene.main;
+                    scene = Scene.main;
                     break;
                 case 1:
-                    scene = GameScene.buy;
+                    scene = Scene.buy;
                     break;
                 case 2:
-                    scene = GameScene.sell;
+                    scene = Scene.sell;
                     break;
             }
             return scene;
         }
 
-        private GameScene BuyScene()
+        private Scene BuyScene()
         {
-            GameScene scene = GameScene.main;
+            Scene scene = Scene.main;
             Clear();
 
             WriteLine();
@@ -378,7 +370,7 @@ namespace Team01DungeonGame
             switch (input)
             {
                 case 0:
-                    scene = GameScene.market;
+                    scene = Scene.market;
                     break;
                 default:
                     if (_player.Gold >= _merchant.Inventory[input - 1].Cost)
@@ -386,7 +378,7 @@ namespace Team01DungeonGame
                         _player.Gold -= _merchant.Inventory[input - 1].Cost;
                         _player.AddItem(_merchant.Inventory[input - 1]);
 
-                        scene = GameScene.buy;
+                        scene = Scene.buy;
                     }
                     else
                     {
@@ -397,9 +389,9 @@ namespace Team01DungeonGame
             return scene;
         }
 
-        private GameScene SellScene()
+        private Scene SellScene()
         {
-            GameScene scene = GameScene.main;
+            Scene scene = Scene.main;
             Clear();
 
             WriteLine();
@@ -426,21 +418,21 @@ namespace Team01DungeonGame
             switch (input)
             {
                 case 0:
-                    scene = GameScene.market;
+                    scene = Scene.market;
                     break;
                 default:
                     _player.Gold += (int)(_player.Inventory[input - 1].Cost * 0.85f);
                     _player.SubtractItem(_player.Inventory[input - 1]);
 
-                    scene = GameScene.sell;
+                    scene = Scene.sell;
                     break;
             }
             return scene;
         }
 
-        private GameScene RestScene()
+        private Scene RestScene()
         {
-            GameScene scene = GameScene.main;
+            Scene scene = Scene.main;
             Clear();
 
             WriteLine();
@@ -456,7 +448,7 @@ namespace Team01DungeonGame
             switch (CheckValidInput(0, 1))
             {
                 case 0:
-                    scene = GameScene.main;
+                    scene = Scene.main;
                     break;
                 case 1:
                     if (_player.Gold >= 500)
@@ -465,15 +457,14 @@ namespace Team01DungeonGame
                         _player.Gold -= 500;
                         WriteLine(" 휴식을 완료했습니다.");
                         Thread.Sleep(3000);
-                        scene = GameScene.rest;
+                        scene = Scene.rest;
                     }
                     else
                     {
                         WriteLine(" Gold가 부족합니다.");
                         Thread.Sleep(3000);
-                        scene = GameScene.rest;
+                        scene = Scene.rest;
                     }
-
                     break;
             }
 
@@ -481,83 +472,66 @@ namespace Team01DungeonGame
             return scene;
         }
 
-        private GameScene RunBattleScene()
-        {
-            GameScene scene = GameScene.main;
-            Clear();
-
-            Battle _battle = new Battle(0, _player);
-            _battle.PlayBattle();
-
-            return scene;
-        }
-
-        /*
-        private Scene BattleScene()
+        private Scene DungeonScene()
         {
             Scene scene = Scene.main;
             Clear();
 
-            PrintColoredText(" Bettle!!");
             WriteLine();
-            WriteLine(" Lv.6 대포미니언");
-            WriteLine(" Lv.4 공허충");
+            PrintColoredText(" 이곳은 던전의 입구입니다");
             WriteLine();
-            WriteLine(" [내정보]");
-            Write($" {_player.Name}");
-            PrintwithColoredText(" ", (_player.PrintJob()));
-
-            int bonusHP = GetSumBonusString("HP");
-            Console.WriteLine(" HP " + _player.HP + "/" + _player.MAX_HP);
-            int bonusMP = GetSumBonusString("MP");
-            WriteLine(" MP ");
-
-            WriteLine();
-            WriteLine(" 1. 공격");
-            WriteLine(" 2. 나가기");
+            WriteLine(" 1. 입장하기");
+            WriteLine(" 0. 나가기");
             WriteLine();
             WriteLine(" 원하시는 행동을 입력해주세요.");
 
-            switch (CheckValidInput(1, 2))
+            switch (CheckValidInput(0, 1))
             {
+                case 0:
+                    scene = Scene.main;
+                    break;
                 case 1:
-                    scene = Scene.battle;
+                    if (_player.HP == 0)
+                    {
+                        WriteLine("체력이 없습니다. 체력을 회복하고 시도해주세요");
+                        Thread.Sleep(3000);
+                        scene = Scene.dungeon;
+                    }
+                    else
+                    {
+                        scene = Scene.stagePick;
+                    }
                     break;
-                case 2:
-                    scene = Scene.Skill;
-                    break;
-
             }
             return scene;
         }
-        */
 
-        private GameScene SkillScene()
+        private Scene StagePickScene()
         {
-            GameScene scene = GameScene.main;
+            Scene scene = Scene.main;
             Clear();
 
-            return scene;
-        }
+            WriteLine();
+            PrintColoredText(" Dungeon!");
+            WriteLine();
+            WriteLine(" 0. 나가기");
+            WriteLine();
+            WriteLine(" 던전의 스테이지를 입력해주세요");
 
-        private int GetSumBonusString(string propertyName)
-        {
-            int sum = 0;
-            for (int i = 0; i < _player.Inventory.Count; i++)
+            int userInput = CheckValidInput(0, _player.Level + 100);
+
+            switch (userInput)
             {
-                if (_items[i].IsEquipped)
-                {
-                    // 리플렉션을 사용하여 현재 아이템의 propertyName 속성 값을 가져옵니다.
-                    var propertyInfo = _player.Inventory[i].GetType().GetProperty(propertyName);
-                    if (propertyInfo != null)
-                    {
-                        // 속성 값이 int 타입이라고 가정하고 값을 가져옵니다.
-                        int value = (int)propertyInfo.GetValue(_player.Inventory[i], null);
-                        sum += value;
-                    }
-                }
+                case 0:
+                    scene = Scene.dungeon;
+                    break;
+                default:
+                    Battle battle = new Battle(userInput, _player);
+                    battle.PlayBattle();
+                    scene = Scene.stagePick;
+                    break;
             }
-            return sum;
+            return scene;
         }
 
         private int CheckValidInput(int min, int max)
@@ -575,6 +549,13 @@ namespace Team01DungeonGame
                     else
                     {
                         WriteLine(" 잘못된 입력입니다. 다시 입력해주세요");
+                    }
+                }
+                else
+                {
+                    if(input == "iamdeveloper")
+                    {
+                        return (int)JobType.developer + 1;
                     }
                 }
             }

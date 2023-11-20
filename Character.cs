@@ -36,7 +36,9 @@ namespace Team01DungeonGame
                 case JobType.human:
                     Atk = 10;
                     Def = 5;
+                    HP = 100;
                     MaxHP = 100;
+                    MP = 50;
                     MaxMP = 50;
                     break;
                 case JobType.warrior:
@@ -52,9 +54,12 @@ namespace Team01DungeonGame
                     MaxMP = 100;
                     break;
                 case JobType.developer:
+                    Level = 1000;
                     Atk = 10000;
                     Def = 10000;
+                    HP = 10000;
                     MaxHP = 10000;
+                    MP = 10000;
                     MaxMP = 10000;
                     break;
             }
@@ -73,6 +78,9 @@ namespace Team01DungeonGame
                     break;
                 case JobType.mage:
                     jobName = "마법사";
+                    break;
+                case JobType.developer:
+                    jobName = "개발자";
                     break;
             }
             return jobName;

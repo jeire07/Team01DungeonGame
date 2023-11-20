@@ -2,14 +2,12 @@
 
 namespace Team01DungeonGame
 {
-
-    enum BattleScene
-    {
-        battleInit, playerPick, playerAtk, playerSkill, playerEnd, monster, result, exitDungeon
-    }
-
     public class Battle
     {
+        enum Scene
+        {
+            playerPick, playerAtk, playerSkill, playerEnd, monster, result, exitDungeon
+        }
 
         public int Stage { get; set; }
         private int _monsterCount { get; set; }
@@ -19,19 +17,10 @@ namespace Team01DungeonGame
         public Battle(int stage, Character player)
         {
             Stage = stage;
-            List<Monster> _monsters = new List<Monster>(4);
-            _monsterCount = _monsters.Count;
             _player = player;
+            _monsters = new List<Monster>();
             MakeStage();
-        }
-
-        public void PlayBattle()
-        {
-            BattleScene BattleScene = BattleScene.battleInit;
-            while (BattleScene != BattleScene.exitDungeon)
-            {
-                BattleScene = SceneManager(BattleScene);
-            }
+            _monsterCount = _monsters.Count;
         }
 
         private void MakeStage()
@@ -39,16 +28,19 @@ namespace Team01DungeonGame
             Random random = new Random();
             int randNum = random.Next(1, 5);
             int randType = random.Next(0, 3);
+            Monster monster;
 
             if (Stage >= 1)
             {
-                _monsters.Add(new Monster(Stage, (MonsterType)randType));
+                monster = new Monster(Stage, (MonsterType)randType);
+                _monsters.Add(monster);
             }
 
             if (Stage >= 2)
             {
                 if (randNum > 3)
                 {
+                    randType = random.Next(0, 3);
                     _monsters.Add(new Monster(Stage, (MonsterType)randType));
                 }
             }
@@ -57,6 +49,7 @@ namespace Team01DungeonGame
             {
                 if (randNum > 2)
                 {
+                    randType = random.Next(0, 3);
                     _monsters.Add(new Monster(Stage, (MonsterType)randType));
                 }
             }
@@ -65,25 +58,98 @@ namespace Team01DungeonGame
             {
                 if (randNum > 1)
                 {
+                    randType = random.Next(0, 3);
                     _monsters.Add(new Monster(Stage, (MonsterType)randType));
                 }
             }
         }
-        
-        private BattleScene InitScene()
+
+        public void PlayBattle()
         {
-            BattleScene scene = 0;
+            Scene scene = Scene.playerPick;
+            while (scene != Scene.exitDungeon)
+            {
+                scene = SceneManager(scene);
+            }
+        }
+
+        private Scene SceneManager(Scene scene)
+        {
+            switch (scene)
+            {
+                case Scene.playerPick:
+                    scene = PlayerPickScene();
+                    break;
+                case Scene.playerAtk:
+                    scene = PlayerAttackScene();
+                    break;
+                case Scene.playerSkill:
+                    scene = PlayerSkillScene();
+                    break;
+                case Scene.playerEnd:
+                    scene = PlayerEndScene();
+                    break;
+                case Scene.monster:
+                    scene = MonsterScene();
+                    break;
+                case Scene.result:
+                    scene = ResultScene();
+                    break;
+            }
+            return scene;
+        }
+
+        private Scene PlayerPickScene()
+        {
+            Scene scene = 0;
             Clear();
 
             WriteLine();
             PrintColoredText(" Battle!!");
             WriteLine("");
 
-            MakeStage();
-            int monsterCount = Monster.Count;
+            int monsterCount = _monsters.Count;
             for (int i = 0; i < monsterCount; i++)
             {
                 _monsters[i].MonsterInfo(false, i + 1);
+            }
+
+            WriteLine();
+            WriteLine(" 0. 도망가기");
+            WriteLine(" 1. 기본 공격");
+            WriteLine(" 2. 스킬 공격");
+            WriteLine();
+            WriteLine(" 원하시는 행동을 입력해주세요.");
+
+            int input = CheckValidInput(0, 2);
+            switch (input)
+            {
+                case 0:
+                    scene = Scene.result;
+                    break;
+                case 1:
+                    scene = Scene.playerAtk;
+                    break;
+                case 2:
+                    scene = Scene.playerSkill;
+                    break;
+            }
+            return scene;
+        }
+
+        private Scene PlayerAttackScene()
+        {
+            Scene scene = 0;
+            Clear();
+
+            WriteLine();
+            PrintColoredText(" Battle!!");
+            WriteLine("");
+
+            int monsterCount = _monsters.Count;
+            for (int i = 0; i < monsterCount; i++)
+            {
+                _monsters[i].MonsterInfo(true, i + 1);
             }
 
             WriteLine();
@@ -95,68 +161,35 @@ namespace Team01DungeonGame
             switch (input)
             {
                 case 0:
-                    scene = BattleScene.playerAtk;
+                    scene = Scene.playerAtk;
                     break;
                 default:
                     _monsters[input - 1].TakeDamage(PlayerDamage(_player.Atk + Item.AtkBonus));
-                    scene = BattleScene.playerEnd;
+                    scene = Scene.playerEnd;
                     break;
             }
             return scene;
         }
 
-        private BattleScene SceneManager(BattleScene scene)
+        private Scene PlayerSkillScene()
         {
-            switch (scene)
-            {
-                case BattleScene.battleInit:
-                    scene = InitScene();
-                    break;
-                case BattleScene.playerPick:
-                    scene = PlayerPickScene();
-                    break;
-                case BattleScene.playerAtk:
-                    scene = PlayerAttackScene();
-                    break;
-                case BattleScene.playerSkill:
-                    scene = PlayerSkillScene();
-                    break;
-                case BattleScene.playerEnd:
-                    scene = PlayerEndScene();
-                    break;
-                case BattleScene.monster:
-                    scene = MonsterScene();
-                    break;
-                case BattleScene.result:
-                    ResultScene();
-                    break;
-            }
+            Scene scene = Scene.playerPick;
+            Clear();
+
             return scene;
         }
 
-        private void ResultScene()
+        private Scene PlayerEndScene()
         {
-            throw new NotImplementedException();
+            Scene scene = Scene.playerPick;
+            Clear();
+
+            return scene;
         }
 
-        private BattleScene PlayerPickScene()
+        private Scene MonsterScene()
         {
-            throw new NotImplementedException();
-        }
-
-        private BattleScene PlayerSkillScene()
-        {
-            throw new NotImplementedException();
-        }
-
-        private BattleScene PlayerEndScene()
-        {
-            throw new NotImplementedException();
-        }
-
-        private BattleScene MonsterScene()
-        {
-            BattleScene scene = 0;
+            Scene scene = 0;
             Clear();
 
             // 남아있는 몬스터를 가져온다.
@@ -190,45 +223,11 @@ namespace Team01DungeonGame
             return scene;
         }
 
-        private BattleScene SkillScene()
+        private Scene ResultScene()
         {
-            BattleScene scene = BattleScene.battleInit;
+            Scene scene = Scene.playerPick;
             Clear();
 
-            return scene;
-        }
-
-        private BattleScene PlayerAttackScene()
-        {
-            BattleScene scene = 0;
-            Clear();
-
-            WriteLine();
-            PrintColoredText(" Battle!!");
-            WriteLine("");
-
-            int monsterCount = _monsters.Count;
-            for (int i = 0; i < monsterCount; i++)
-            {
-                _monsters[i].MonsterInfo(true, i + 1);
-            }
-
-            WriteLine();
-            WriteLine(" 0. 나가기");
-            WriteLine();
-            WriteLine(" 공격할 대상을 선택해주세요.");
-
-            int input = CheckMonsterInput(0, monsterCount);
-            switch (input)
-            {
-                case 0:
-                    scene = BattleScene.playerAtk;
-                    break;
-                default:
-                    _monsters[input - 1].TakeDamage(PlayerDamage(_player.Atk + Item.AtkBonus));
-                    scene = BattleScene.playerEnd;
-                    break;
-            }
             return scene;
         }
 
@@ -245,8 +244,7 @@ namespace Team01DungeonGame
                     ret -= 1;
                     if (ret >= min && ret <= max)
                     {
-                        // 이 부분에 몬스터 클래스를 아이템으로 가지는 배열 혹은 컬렉션 필요
-                        if (_monsters[ret].IsAlive)  // <- Monsters[]의 식별자 수정
+                        if (_monsters[ret].IsAlive)
                         {
                             return ret;
                         }
