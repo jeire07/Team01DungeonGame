@@ -517,6 +517,7 @@ namespace Team01DungeonGame
             WriteLine(" 0. 나가기");
             WriteLine();
             WriteLine(" 던전의 스테이지를 입력해주세요");
+            WriteLine(" 현재 선택 가능 난이도: 1 ~ {0}", _player.Level + 100);
 
             int userInput = CheckValidInput(0, _player.Level + 100);
 
