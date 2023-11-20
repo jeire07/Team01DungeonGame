@@ -1,14 +1,16 @@
 ﻿using static System.Console;
 
-namespace Game05TextGame
+namespace Team01DungeonGame
 {
-    enum Scene
+
+    enum BattleScene
     {
         battleInit, playerPick, playerAtk, playerSkill, playerEnd, monster, result, exitDungeon
     }
 
     public class Battle
     {
+
         public int Stage { get; set; }
         private int _monsterCount { get; set; }
         private List<Monster> _monsters { get; set; }
@@ -17,7 +19,7 @@ namespace Game05TextGame
         public Battle(int stage, Character player)
         {
             Stage = stage;
-            _monsters = new List<Monster>(4);
+            List<Monster> _monsters = new List<Monster>(4);
             _monsterCount = _monsters.Count;
             _player = player;
             MakeStage();
@@ -25,11 +27,11 @@ namespace Game05TextGame
 
         public void PlayBattle()
         {
-            Scene _scene = Scene.battleInit;
+            BattleScene BattleScene = BattleScene.battleInit;
             _player = new Character("username", JobType.human);
-            while (_scene != Scene.exitDungeon)
+            while (BattleScene != BattleScene.exitDungeon)
             {
-                _scene = SceneManager(_scene);
+                BattleScene = SceneManager(BattleScene);
             }
         }
 
@@ -68,17 +70,18 @@ namespace Game05TextGame
                 }
             }
         }
-
-        private Scene BattleScene()
+        
+        private BattleScene InitScene()
         {
-            Scene scene = 0;
+            BattleScene scene = 0;
             Clear();
 
             WriteLine();
             PrintColoredText(" Battle!!");
             WriteLine("");
 
-            int monsterCount = _monsters.Count;
+            MakeStage();
+            int monsterCount = Monster.Count;
             for (int i = 0; i < monsterCount; i++)
             {
                 _monsters[i].MonsterInfo(false, i + 1);
@@ -93,39 +96,39 @@ namespace Game05TextGame
             switch (input)
             {
                 case 0:
-                    scene = Scene.playerAtk;
+                    scene = BattleScene.playerAtk;
                     break;
                 default:
                     _monsters[input - 1].TakeDamage(PlayerDamage(_player.Atk + Item.AtkBonus));
-                    scene = Scene.playerEnd;
+                    scene = BattleScene.playerEnd;
                     break;
             }
             return scene;
         }
 
-        private Scene SceneManager(Scene scene)
+        private BattleScene SceneManager(BattleScene scene)
         {
             switch (scene)
             {
-                case Scene.battleInit:
-                    scene = BattleScene();
+                case BattleScene.battleInit:
+                    scene = InitScene();
                     break;
-                case Scene.playerPick:
+                case BattleScene.playerPick:
                     scene = PlayerPickScene();
                     break;
-                case Scene.playerAtk:
+                case BattleScene.playerAtk:
                     scene = PlayerAttackScene();
                     break;
-                case Scene.playerSkill:
+                case BattleScene.playerSkill:
                     scene = PlayerSkillScene();
                     break;
-                case Scene.playerEnd:
+                case BattleScene.playerEnd:
                     scene = PlayerEndScene();
                     break;
-                case Scene.monster:
+                case BattleScene.monster:
                     scene = MonsterScene();
                     break;
-                case Scene.result:
+                case BattleScene.result:
                     ResultScene();
                     break;
             }
@@ -137,37 +140,68 @@ namespace Game05TextGame
             throw new NotImplementedException();
         }
 
-        private Scene PlayerPickScene()
+        private BattleScene PlayerPickScene()
         {
             throw new NotImplementedException();
         }
 
-        private Scene PlayerSkillScene()
+        private BattleScene PlayerSkillScene()
         {
             throw new NotImplementedException();
         }
 
-        private Scene PlayerEndScene()
+        private BattleScene PlayerEndScene()
         {
             throw new NotImplementedException();
         }
 
-        private Scene MonsterScene()
+        private BattleScene MonsterScene()
         {
-            throw new NotImplementedException();
+            BattleScene scene = 0;
+            Clear();
+
+            // 남아있는 몬스터를 가져온다.
+            foreach (Monster monster in _monsters)
+            {
+                if (monster.IsTurn == true)
+                {
+                    if (monster.IsAlive == true)
+                    {
+                        int minDamage = (int)Math.Ceiling(_player.Atk * 0.9f);
+                        int maxDamage = (int)Math.Ceiling(_player.Atk * 1.1f);
+
+                        Random range = new Random();
+                        int damage = range.Next(minDamage, maxDamage);
+
+                        WriteLine(" Battle!!");
+                        WriteLine();
+                        WriteLine($"LV.{monster.Level} {monster.Name} 의 공격!");
+                        WriteLine($"{_player} 를(을) 맞췄습니다.  [데미지 : {damage}]");
+                        WriteLine();
+                        WriteLine($"{_player.Level} {_player}");
+                        WriteLine($"HP {_player.HP} -> {_player.HP - damage}");
+                        _player.HP -= damage;
+                        WriteLine();
+                        WriteLine("다음");
+                        Write(">> ");
+                        ReadKey(true);
+                    }
+                }
+            }
+            return scene;
         }
 
-        private Scene SkillScene()
+        private BattleScene SkillScene()
         {
-            Scene scene = Scene.battleInit;
+            BattleScene scene = BattleScene.battleInit;
             Clear();
 
             return scene;
         }
 
-        private Scene PlayerAttackScene()
+        private BattleScene PlayerAttackScene()
         {
-            Scene scene = 0;
+            BattleScene scene = 0;
             Clear();
 
             WriteLine();
@@ -189,11 +223,11 @@ namespace Game05TextGame
             switch (input)
             {
                 case 0:
-                    scene = Scene.playerAtk;
+                    scene = BattleScene.playerAtk;
                     break;
                 default:
                     _monsters[input - 1].TakeDamage(PlayerDamage(_player.Atk + Item.AtkBonus));
-                    scene = Scene.playerEnd;
+                    scene = BattleScene.playerEnd;
                     break;
             }
             return scene;

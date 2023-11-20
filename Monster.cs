@@ -16,6 +16,8 @@ namespace Team01DungeonGame
         public bool IsAlive { get; set; }
         public bool IsTurn { get; set; }
 
+        public static int Count = 0;
+
 
         public Monster(int level, MonsterType job)
         {
@@ -48,39 +50,11 @@ namespace Team01DungeonGame
             }
 
             IsAlive = true;
+
+            Count++;
         }
 
-        public void PrintMonsterAtkScene()  //몬스터 턴일때 배틀 메소드
-        {
-            // 남아있는 몬스터를 가져온다.
-            foreach (Monster monster in _dungeon.Monsters)
-            {
-                if (monster.IsTurn == true)
-                {
-                    if (monster.IsAlive == true)
-                    {
-                        int minDamage = (int)Math.Ceiling(Atk * 0.9f);
-                        int maxDamage = (int)Math.Ceiling(Atk * 1.1f);
 
-                        Random range = new Random();
-                        int damage = range.Next(minDamage, maxDamage);
-
-                        WriteLine(" Battle!!");
-                        WriteLine();
-                        WriteLine($"LV.{monster.Level} {monster.Name} 의 공격!");
-                        WriteLine($"{_player} 를(을) 맞췄습니다.  [데미지 : {damage}]");
-                        WriteLine();
-                        WriteLine($"{_player.Level} {_player}");
-                        WriteLine($"HP {_player.HP} -> {_player.HP - damage}");
-                        _player.HP -= damage;
-                                        WriteLine();
-                        WriteLine("다음");
-                        Write(">> ");
-                        ReadKey(true);
-                    }
-                }
-            }
-        }
 
         public int TakeDamage(int damage)
         {
@@ -100,7 +74,7 @@ namespace Team01DungeonGame
 
         public void MonsterInfo(bool withNumber = false, int idx = 0)
         {
-            if(IsAlive)
+            if (IsAlive)
             {
                 if (withNumber)
                 {

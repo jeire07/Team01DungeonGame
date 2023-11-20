@@ -1,7 +1,7 @@
 ﻿using Team01DungeonGame;
 using static System.Console;
 
-namespace Game05TextGame
+namespace Team01DungeonGame
 {
     public enum EquipType
     {
