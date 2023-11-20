@@ -212,6 +212,8 @@ namespace Team01DungeonGame
                         WriteLine($"{_player} 를(을) 맞췄습니다.  [데미지 : {damage}]");
                         WriteLine();
                         WriteLine($"{_player.Level} {_player}");
+                        WriteLine($"{_player.Def}방어");
+                        damage -= _player.Def;
                         WriteLine($"HP {_player.HP} -> {_player.HP - damage}");
                         _player.HP -= damage;
                         WriteLine();
@@ -219,7 +221,6 @@ namespace Team01DungeonGame
                         Write(">> ");
                         ReadKey(true);
                     }
-
                     if (_player.IsAlive == false)
                     {
                         scene = Scene.result;
@@ -306,7 +307,7 @@ namespace Team01DungeonGame
         /// </summary>
         /// <param name="atk">player's atk field value</param>
         /// <returns></returns>
-        private int PlayerDamage(int atk)
+        private int PlayerDamage(float atk)
         {
             int minDamage = (int)Math.Ceiling(atk * 0.9f);
             int maxDamage = (int)Math.Ceiling(atk * 1.1f);
