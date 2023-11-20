@@ -30,6 +30,7 @@ namespace Team01DungeonGame
                     Atk = 5 + level;
                     Def = 0;
                     HP = 15 + level;
+                    MaxHP = 15 + level;
                     Gold = 20 + level;
                     break;
                 case MonsterType.insect:
@@ -37,6 +38,7 @@ namespace Team01DungeonGame
                     Atk = 5 + level;
                     Def = 0;
                     HP = 10 + level;
+                    MaxHP = 10 + level;
                     Gold = 15 + level;
                     break;
                 case MonsterType.canon:
@@ -44,6 +46,7 @@ namespace Team01DungeonGame
                     Atk = 8 + level;
                     Def = 0;
                     HP = 25 + level;
+                    MaxHP = 25 + level;
                     Gold = 33 + level;
                     break;
             }
@@ -51,19 +54,14 @@ namespace Team01DungeonGame
             IsAlive = true;
         }
 
-        public int TakeDamage(int damage)
+        public void TakeDamage(int damage)
         {
-            int hp = HP;
-            hp -= damage;
+            HP -= damage;
 
-            if (hp < 0)
+            if (HP < 0)
             {
+                HP = 0;
                 IsAlive = false;
-                return 0;
-            }
-            else
-            {
-                return hp;
             }
         }
 
@@ -82,9 +80,9 @@ namespace Team01DungeonGame
                     Write($"{Level} ");
                     ResetColor();
 
-                    Write($"{Name} HP");
+                    Write($"{Name} HP ");
                     ForegroundColor = ConsoleColor.Yellow;
-                    WriteLine($"{HP}");
+                    WriteLine($"{HP} / {MaxHP}");
                     ResetColor();
                 }
                 else
@@ -94,16 +92,24 @@ namespace Team01DungeonGame
                     Write($"{Level} ");
                     ResetColor();
 
-                    Write($"{Name} HP");
+                    Write($"{Name} HP ");
                     ForegroundColor = ConsoleColor.Magenta;
-                    WriteLine($"{HP}");
+                    WriteLine($"{HP} / {MaxHP}");
                     ResetColor();
                 }
             }
             else  // when monster died
             {
-                ForegroundColor = ConsoleColor.Gray;
-                Write($"{idx} Lv.{Level} {Name} Dead");
+                if (withNumber)
+                {
+                    ForegroundColor = ConsoleColor.Gray;
+                    WriteLine($" Lv.{Level} {Name} Dead");
+                }
+                else
+                {
+                    ForegroundColor = ConsoleColor.Gray;
+                    WriteLine($" Lv.{Level} {Name} Dead");
+                }
             }
         }
     }
