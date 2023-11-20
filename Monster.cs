@@ -72,10 +72,10 @@ namespace Team01DungeonGame
                 if (withNumber)
                 {
                     ForegroundColor = ConsoleColor.Cyan;
-                    Write($"{idx} ");
+                    Write($" {idx}");
                     ResetColor();
 
-                    Write("Lv.");
+                    Write(" Lv.");
                     ForegroundColor = ConsoleColor.Cyan;
                     Write($"{Level} ");
                     ResetColor();
@@ -87,13 +87,13 @@ namespace Team01DungeonGame
                 }
                 else
                 {
-                    Write("Lv.");
-                    ForegroundColor = ConsoleColor.Magenta;
+                    Write(" Lv.");
+                    ForegroundColor = ConsoleColor.Cyan;
                     Write($"{Level} ");
                     ResetColor();
 
                     Write($"{Name} HP ");
-                    ForegroundColor = ConsoleColor.Magenta;
+                    ForegroundColor = ConsoleColor.Yellow;
                     WriteLine($"{HP} / {MaxHP}");
                     ResetColor();
                 }
@@ -102,13 +102,15 @@ namespace Team01DungeonGame
             {
                 if (withNumber)
                 {
-                    ForegroundColor = ConsoleColor.Gray;
+                    ForegroundColor = ConsoleColor.DarkGray;
                     WriteLine($" Lv.{Level} {Name} Dead");
+                    ResetColor();
                 }
                 else
                 {
-                    ForegroundColor = ConsoleColor.Gray;
+                    ForegroundColor = ConsoleColor.DarkGray;
                     WriteLine($" Lv.{Level} {Name} Dead");
+                    ResetColor();
                 }
             }
         }
