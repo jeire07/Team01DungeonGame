@@ -558,6 +558,10 @@ namespace Team01DungeonGame
                     {
                         return (int)JobType.developer + 1;
                     }
+                    else
+                    {
+                        WriteLine(" 잘못된 입력입니다. 다시 입력해주세요");
+                    }
                 }
             }
         }
