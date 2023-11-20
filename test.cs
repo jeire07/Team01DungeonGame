@@ -1,8 +1,10 @@
-﻿namespace Team01DungeonGame
+﻿namespace ConsoleApp1
 {
     internal class test
     {
-        public int Sungdae(int x)
-        { return x; }
+		public void won()
+		{
+			return 0;
+		}
     }
 }
