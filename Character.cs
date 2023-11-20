@@ -2,7 +2,7 @@
 
 namespace Team01DungeonGame
 {
-    public enum JobType { human, warrior, mage };
+    public enum JobType { human, warrior, mage, developer };
 
     public class Character
     {
@@ -12,25 +12,52 @@ namespace Team01DungeonGame
         public int Atk { get; set; }
         public int Def { get; set; }
         public int HP { get; set; }
-        public int MAX_HP { get; set; }
+        public int MaxHP { get; set; }
+        public int MP { get; set; }
+        public int MaxMP { get; set; }
         public int Gold { get; set; }
         public bool IsAlive { get; set; }
         public List<Item> Inventory { get; }
         public Item[] Equips { get; }
 
-        public Character(string name, JobType job = JobType.human, int level = 1,
-            int atk = 10, int def = 5, int hp = 100, int max_hp = 100, int gold = 1500)
+        public Character(string name, JobType job = JobType.human)
         {
             Name = name;
             Job = job;
-            Level = level;
-            Atk = atk;
-            Def = def;
-            HP = hp;
-            MAX_HP = max_hp;
-            Gold = gold;
+            Level = 1;
+            Gold = 1500;
+            IsAlive = true;
+
             Inventory = new List<Item>(20);
             Item[] Equips = new Item[9];
+
+            switch (job)
+            {
+                case JobType.human:
+                    Atk = 10;
+                    Def = 5;
+                    MaxHP = 100;
+                    MaxMP = 50;
+                    break;
+                case JobType.warrior:
+                    Atk = 15;
+                    Def = 10;
+                    MaxHP = 110;
+                    MaxMP = 40;
+                    break;
+                case JobType.mage:
+                    Atk = 5;
+                    Def = 0;
+                    MaxHP = 90;
+                    MaxMP = 100;
+                    break;
+                case JobType.developer:
+                    Atk = 10000;
+                    Def = 10000;
+                    MaxHP = 10000;
+                    MaxMP = 10000;
+                    break;
+            }
         }
 
         public string PrintJob()
@@ -62,7 +89,7 @@ namespace Team01DungeonGame
             {
                 Item.AtkBonus -= Inventory[idx].Atk;
                 Item.DefBonus -= Inventory[idx].Def;
-                Item.HPBonus -= Inventory[idx].HP;
+                Item.HPBonus  -= Inventory[idx].HP;
 
                 Inventory[idx].IsEquipped = false;
             }
@@ -70,7 +97,7 @@ namespace Team01DungeonGame
             {
                 Item.AtkBonus += Inventory[idx].Atk;
                 Item.DefBonus += Inventory[idx].Def;
-                Item.HPBonus += Inventory[idx].HP;
+                Item.HPBonus  += Inventory[idx].HP;
 
                 Inventory[idx].IsEquipped = true;
             }
