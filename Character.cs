@@ -9,7 +9,7 @@ namespace Team01DungeonGame
         public string Name { get; set; }
         public JobType Job { get; set; }
         public int Level { get; set; }
-        public int Atk { get; set; }
+        public float Atk { get; set; }
         public int Def { get; set; }
         public int HP { get; set; }
         public int MaxHP { get; set; }
@@ -19,6 +19,9 @@ namespace Team01DungeonGame
         public bool IsAlive { get; set; }
         public List<Item> Inventory { get; }
         public Item[] Equips { get; }
+        public int Exe { get; set; }
+        public int MaxExe { get; set; }
+
 
         public Character(string name, JobType job = JobType.human)
         {
@@ -27,6 +30,8 @@ namespace Team01DungeonGame
             Level = 1;
             Gold = 1500;
             IsAlive = true;
+            Exe = 0;
+            MaxExe = 10;
 
             Inventory = new List<Item>(20);
             Item[] Equips = new Item[9];
@@ -143,6 +148,17 @@ namespace Team01DungeonGame
             {
                 item.IsEquipped = false;
                 Inventory.Remove(item);
+            }
+        }
+        public void LevelUp()
+        {
+            if (Exe >= MaxExe)
+            {
+                Exe -= MaxExe;
+                Level++;
+                MaxExe = (int)Math.Ceiling(MaxExe * 1.5f);
+                Atk += 0.5f;
+                Def += 1;
             }
         }
 
