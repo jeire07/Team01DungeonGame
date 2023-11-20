@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using static System.Console;
+﻿using static System.Console;
 
 namespace Team01DungeonGame
 {
@@ -10,10 +9,16 @@ namespace Team01DungeonGame
             playerPick, playerAtk, playerSkill, playerEnd, monster, result, exitDungeon
         }
 
+        enum AtkEffect { normal, critical, avoid }
+
         public int Stage { get; set; }
         private int _monsterCount { get; set; }
         private List<Monster> _monsters { get; set; }
-        public Character _player { get; set; }
+        private Character _player { get; set; }
+
+        private AtkEffect isCritOrAvoid = AtkEffect.normal;
+        private int _playerDamage = 0;
+        private int _monsterIdx = 0;
 
         public Battle(int stage, Character player)
         {
@@ -33,8 +38,7 @@ namespace Team01DungeonGame
 
             if (Stage >= 1)
             {
-                monster = new Monster(Stage, (MonsterType)randType);
-                _monsters.Add(monster);
+                _monsters.Add(new Monster(Stage, (MonsterType)randType));
             }
 
             if (Stage >= 2)
@@ -116,6 +120,10 @@ namespace Team01DungeonGame
             }
 
             WriteLine();
+            WriteLine(" [내 정보]");
+            _player.CharacterInfo();
+
+            WriteLine();
             WriteLine(" 0. 도망가기");
             WriteLine(" 1. 기본 공격");
             WriteLine(" 2. 스킬 공격");
@@ -154,18 +162,25 @@ namespace Team01DungeonGame
             }
 
             WriteLine();
+            WriteLine(" [내 정보]");
+            _player.CharacterInfo();
+
+            WriteLine();
             WriteLine(" 0. 나가기");
             WriteLine();
             WriteLine(" 공격할 대상을 선택해주세요.");
 
-            int input = CheckMonsterInput(0, monsterCount);
+            int input = CheckMonsterInput(monsterCount);
             switch (input)
             {
                 case 0:
-                    scene = Scene.playerAtk;
+                    scene = Scene.playerPick;
                     break;
                 default:
-                    _monsters[input - 1].TakeDamage(PlayerDamage(_player.Atk + Item.AtkBonus));
+                    _playerDamage = PlayerDamage(_player.Atk + Item.AtkBonus, out isCritOrAvoid);
+                    _monsters[input - 1].TakeDamage(_playerDamage);
+                    _monsterIdx = input - 1;
+                    
                     scene = Scene.playerEnd;
                     break;
             }
@@ -182,49 +197,108 @@ namespace Team01DungeonGame
 
         private Scene PlayerEndScene()
         {
-            Scene scene = Scene.playerPick;
+            Scene scene = Scene.monster;
             Clear();
+
+            WriteLine();
+            PrintColoredText(" Battle!!");
+            WriteLine("");
+
+            int monsterCount = _monsters.Count;
+            for (int i = 0; i < monsterCount; i++)
+            {
+                _monsters[i].MonsterInfo(false, i + 1);
+            }
+
+            WriteLine();
+            WriteLine(" [내 정보]");
+            _player.CharacterInfo();
+
+            WriteLine();
+            WriteLine($" {_player.Name} 의 공격!");
+
+            Monster monster = _monsters[_monsterIdx];
+            Write($" Lv.{monster.Level} {monster.Name} 를(을) 맞췄습니다.");
+            Write($"[데미지 : {_playerDamage}] - ");
+            
+            switch(isCritOrAvoid)
+            {
+                case AtkEffect.normal:
+                    WriteLine("기본 공격");
+                    break;
+                case AtkEffect.critical:
+                    WriteLine("치명타 공격!");
+                    break;
+                case AtkEffect.avoid:
+                    WriteLine("회피!");
+                    break;
+            }
+
+            WriteLine();
+            WriteLine($" Lv.{monster.Level} {monster.Name}");
+            WriteLine($" {monster.Def} 방어");
+            _playerDamage -= monster.Def;
+            WriteLine($" HP {monster.HP} -> {monster.HP - _playerDamage}");
+            monster.HP -= _playerDamage;
+            WriteLine();
+
+            foreach (Monster checkAlive in _monsters)
+            {
+                if (checkAlive.IsAlive == true)
+                {
+                    scene = Scene.monster;
+                    break;
+                }
+                else
+                {
+                    scene = Scene.result;
+                }
+            }
+            WriteLine(" 0. 다음");
+
+            CheckValidInput(0, 0);
 
             return scene;
         }
 
         private Scene MonsterScene()
         {
-            Scene scene = 0;
+            Scene scene = Scene.playerPick;
             Clear();
+
+            WriteLine();
 
             // 남아있는 몬스터를 가져온다.
             foreach (Monster monster in _monsters)
             {
-                if (monster.IsTurn == true)
+                if (monster.IsAlive == true)
                 {
-                    if (monster.IsAlive == true)
-                    {
-                        int minDamage = (int)Math.Ceiling(_player.Atk * 0.9f);
-                        int maxDamage = (int)Math.Ceiling(_player.Atk * 1.1f);
+                    int minDamage = (int)Math.Ceiling(monster.Atk * 0.9f);
+                    int maxDamage = (int)Math.Ceiling(monster.Atk * 1.1f);
 
-                        Random range = new Random();
-                        int damage = range.Next(minDamage, maxDamage);
+                    Random range = new Random();
+                    int damage = range.Next(minDamage, maxDamage);
 
-                        WriteLine(" Battle!!");
-                        WriteLine();
-                        WriteLine($"LV.{monster.Level} {monster.Name} 의 공격!");
-                        WriteLine($"{_player} 를(을) 맞췄습니다.  [데미지 : {damage}]");
-                        WriteLine();
-                        WriteLine($"{_player.Level} {_player}");
-                        WriteLine($"{_player.Def}방어");
-                        damage -= _player.Def;
-                        WriteLine($"HP {_player.HP} -> {_player.HP - damage}");
-                        _player.HP -= damage;
-                        WriteLine();
-                        WriteLine("다음");
-                        Write(">> ");
-                        ReadKey(true);
-                    }
-                    if (_player.IsAlive == false)
-                    {
-                        scene = Scene.result;
-                    }
+                    WriteLine(" Battle!!");
+                    WriteLine();
+                    WriteLine($" Lv.{monster.Level} {monster.Name} 의 공격!");
+                    WriteLine($" {_player.Name} 을(를) 맞췄습니다.  [데미지 : {damage}]");
+                    WriteLine();
+                    WriteLine($" Lv.{_player.Level} {_player.Name}");
+                    damage = (monster.Atk > _player.Def) ? monster.Atk - _player.Def : 0;
+                    WriteLine($" {_player.Def} 방어");
+                    WriteLine($" HP {_player.HP} -> {_player.HP - damage}");
+                    _player.HP -= damage;
+                    WriteLine();
+                    WriteLine(" 0. 다음");
+                    Write(" >> ");
+
+                    CheckValidInput(0, 0);
+                }
+                    
+                if (_player.IsAlive == false)
+                {
+                    scene = Scene.result;
                 }
             }
             return scene;
@@ -239,30 +313,29 @@ namespace Team01DungeonGame
 
             if (true)
             {
-                Console.Clear();
-                Console.WriteLine("Battle!! - Result!");
-                Console.WriteLine();
-                Console.WriteLine("Victory");
-                Console.WriteLine();
-                Console.WriteLine("던전에서 몬스터 {0}마리를 잡았습니다.");
-                Console.WriteLine();
-                Console.WriteLine("Lv. {0} {1}");
-                Console.WriteLine("HP {0} -> {1}");
-                Console.WriteLine();
-                Console.WriteLine("0. 다음");
+                Clear();
+                WriteLine("Battle!! - Result!");
+                WriteLine();
+                WriteLine("Victory");
+                WriteLine();
+                WriteLine("던전에서 몬스터 {0}마리를 잡았습니다.");
+                WriteLine();
+                WriteLine("Lv. {0} {1}");
+                WriteLine("HP {0} -> {1}");
+                WriteLine();
+                WriteLine("0. 다음");
             }
-
-            if (false)
+            else
             {
-                Console.Clear();
-                Console.WriteLine("Battle!! - Result!");
-                Console.WriteLine();
-                Console.WriteLine("You Lose");
-                Console.WriteLine();
-                Console.WriteLine("Lv. {0} {1}");
-                Console.WriteLine("HP {0} -> 0");
-                Console.WriteLine();
-                Console.WriteLine("0. 다음");
+                Clear();
+                WriteLine("Battle!! - Result!");
+                WriteLine();
+                WriteLine("You Lose");
+                WriteLine();
+                WriteLine("Lv. {0} {1}");
+                WriteLine("HP {0} -> 0");
+                WriteLine();
+                WriteLine("0. 다음");
             }
 
             // Get User Input and change scene
@@ -270,7 +343,7 @@ namespace Team01DungeonGame
             return scene;
         }
 
-        private int CheckMonsterInput(int min, int max)
+        private int CheckMonsterInput(int max)
         {
             while (true)
             {
@@ -280,17 +353,13 @@ namespace Team01DungeonGame
                 bool parseSuccess = int.TryParse(input, out var ret);
                 if (parseSuccess)
                 {
-                    ret -= 1;
-                    if (ret >= min && ret <= max)
+                    if (ret == 0)
                     {
-                        if (_monsters[ret].IsAlive)
-                        {
-                            return ret;
-                        }
-                        else
-                        {
-                            WriteLine(" 잘못된 입력입니다. 다시 입력해주세요");
-                        }
+                        return ret;
+                    }
+                    else if (_monsters[ret - 1].IsAlive)
+                    {
+                        return ret;
                     }
                     else
                     {
@@ -307,7 +376,7 @@ namespace Team01DungeonGame
         /// </summary>
         /// <param name="atk">player's atk field value</param>
         /// <returns></returns>
-        private int PlayerDamage(float atk)
+        private int PlayerDamage(float atk, out AtkEffect isCritOrAvoid)
         {
             int minDamage = (int)Math.Ceiling(atk * 0.9f);
             int maxDamage = (int)Math.Ceiling(atk * 1.1f);
@@ -320,14 +389,17 @@ namespace Team01DungeonGame
 
             if (critOrAvoid < 3)  // 치명타 -> 0, 1, 2 -> 15% probability
             {
+                isCritOrAvoid = AtkEffect.critical;
                 return (int)Math.Ceiling(damage * 1.6f);
             }
             else if (critOrAvoid > 17)  // 회피 -> 18, 19 -> 10% probability
             {
+                isCritOrAvoid = AtkEffect.avoid;
                 return 0;
             }
             else
             {
+                isCritOrAvoid = AtkEffect.normal;
                 return damage;
             }
         }
