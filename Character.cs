@@ -150,7 +150,7 @@ namespace Team01DungeonGame
                 Inventory.Remove(item);
             }
         }
-        public void LevelUp()
+        public void LevelUp() // 전투 결과창에 해당 메소드를 불러온다. + 몬스터의 레벨 == 경험치가 1 오른다.
         {
             if (Exe >= MaxExe)
             {
