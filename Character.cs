@@ -17,11 +17,11 @@ namespace Team01DungeonGame
         public int MaxMP { get; set; }
         public int Gold { get; set; }
         public bool IsAlive { get; set; }
+        public int Exp { get; set; }
+        public int MaxExp { get; set; }
+
         public List<Item> Inventory { get; }
         public Item[] Equips { get; }
-        public int Exe { get; set; }
-        public int MaxExe { get; set; }
-
 
         public Character(string name, JobType job = JobType.human)
         {
@@ -30,8 +30,8 @@ namespace Team01DungeonGame
             Level = 1;
             Gold = 1500;
             IsAlive = true;
-            Exe = 0;
-            MaxExe = 10;
+            Exp = 0;
+            MaxExp = 10;
 
             Inventory = new List<Item>(20);
             Item[] Equips = new Item[9];
@@ -150,13 +150,17 @@ namespace Team01DungeonGame
                 Inventory.Remove(item);
             }
         }
-        public void LevelUp() // 전투 결과창에 해당 메소드를 불러온다. + 몬스터의 레벨 == 경험치가 1 오른다.
+
+        /// <summary>
+        /// 몬스터의 레벨 1당 경험치 1을 받는다.
+        /// 전투 결과창에서 해당 method를 사용한다.
+        /// </summary>
+        public void LevelUp()
         {
-            if (Exe >= MaxExe)
+            if(Exp > MaxExp)
             {
-                Exe -= MaxExe;
                 Level++;
-                MaxExe = (int)Math.Ceiling(MaxExe * 1.5f);
+                MaxExp = (int)Math.Ceiling(MaxExp * 1.5f);
                 Atk += 0.5f;
                 Def += 1;
             }
@@ -175,6 +179,34 @@ namespace Team01DungeonGame
             else
             {
                 return hp;
+            }
+        }
+
+        public void CharacterInfo()
+        {
+            if (IsAlive)
+            {
+                Write(" Lv.");
+                ForegroundColor = ConsoleColor.Cyan;
+                Write($"{Level} ");
+                ResetColor();
+                WriteLine($"{Name}");
+
+                Write(" HP ");
+                ForegroundColor = ConsoleColor.Yellow;
+                WriteLine($"{HP} / {MaxHP}");
+                ResetColor();
+
+                Write(" MP ");
+                ForegroundColor = ConsoleColor.Yellow;
+                WriteLine($"{MP} / {MaxMP}");
+                ResetColor();
+            }
+            else  // when monster died
+            {
+                ForegroundColor = ConsoleColor.DarkGray;
+                WriteLine($" Lv.{Level} {Name} Dead");
+                ResetColor();
             }
         }
     }
