@@ -82,9 +82,9 @@ namespace Team01DungeonGame
             {
                 WriteLine("체력 포션을 사용합니다. 체력이 50 증가합니다.");
                 user.HP += 30;
-                if (user.HP > (100 + Item.HPBonus))
+                if (user.HP > (user.MaxHP + Item.HPBonus))
                 {
-                    user.HP = 100 + Item.HPBonus;
+                    user.HP = user.MaxHP + Item.HPBonus;
                 }
             }
         }
@@ -97,9 +97,9 @@ namespace Team01DungeonGame
             {
                 WriteLine("체력 포션을 사용합니다. 체력이 50 증가합니다.");
                 user.HP += 30;
-                if (user.HP > (100 + Item.MPBonus))
+                if (user.MP > (user.MaxMP + Item.MPBonus))
                 {
-                    user.HP = 100 + Item.MPBonus;
+                    user.MP = user.MaxMP + Item.MPBonus;
                 }
             }
         }
