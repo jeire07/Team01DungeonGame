@@ -1,5 +1,4 @@
-﻿using Team01DungeonGame;
-using static System.Console;
+﻿using static System.Console;
 
 namespace Team01DungeonGame
 {
@@ -90,7 +89,20 @@ namespace Team01DungeonGame
             }
         }
 
+        public class MPPotion
+        {
+            public string Name => "체력 포션";
 
+            public void Use(Character user)
+            {
+                WriteLine("체력 포션을 사용합니다. 체력이 50 증가합니다.");
+                user.HP += 30;
+                if (user.HP > (100 + Item.MPBonus))
+                {
+                    user.HP = 100 + Item.MPBonus;
+                }
+            }
+        }
 
         public string PadRightStat(string text1, int value, string text2, int length)
         {
