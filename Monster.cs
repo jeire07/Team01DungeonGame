@@ -35,7 +35,7 @@ namespace Team01DungeonGame
                     break;
                 case MonsterType.insect:
                     Name = "공허충";
-                    Atk = 5 + level;
+                    Atk = 9 + level;
                     Def = 0;
                     HP = 10 + level;
                     MaxHP = 10 + level;
