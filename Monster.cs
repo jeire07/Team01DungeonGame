@@ -12,11 +12,10 @@ namespace Team01DungeonGame
         public int Atk { get; set; }
         public int Def { get; set; }
         public int HP { get; set; }
+        public int MaxHP { get; set; }
         public int Gold { get; set; }
         public bool IsAlive { get; set; }
         public bool IsTurn { get; set; }
-
-        public static int Count = 0;
 
 
         public Monster(int level, MonsterType job)
@@ -50,11 +49,7 @@ namespace Team01DungeonGame
             }
 
             IsAlive = true;
-
-            Count++;
         }
-
-
 
         public int TakeDamage(int damage)
         {
