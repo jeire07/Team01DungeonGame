@@ -28,7 +28,6 @@ namespace Team01DungeonGame
         public void PlayBattle()
         {
             BattleScene BattleScene = BattleScene.battleInit;
-            _player = new Character("username", JobType.human);
             while (BattleScene != BattleScene.exitDungeon)
             {
                 BattleScene = SceneManager(BattleScene);
