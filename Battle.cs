@@ -1,4 +1,5 @@
-﻿using static System.Console;
+﻿using System.Threading;
+using static System.Console;
 
 namespace Team01DungeonGame
 {
@@ -218,6 +219,11 @@ namespace Team01DungeonGame
                         Write(">> ");
                         ReadKey(true);
                     }
+
+                    if (_player.IsAlive == false)
+                    {
+                        scene = Scene.result;
+                    }
                 }
             }
             return scene;
@@ -227,6 +233,38 @@ namespace Team01DungeonGame
         {
             Scene scene = Scene.playerPick;
             Clear();
+
+            // FIXME : Highlighted texts
+
+            if (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Battle!! - Result!");
+                Console.WriteLine();
+                Console.WriteLine("Victory");
+                Console.WriteLine();
+                Console.WriteLine("던전에서 몬스터 {0}마리를 잡았습니다.");
+                Console.WriteLine();
+                Console.WriteLine("Lv. {0} {1}");
+                Console.WriteLine("HP {0} -> {1}");
+                Console.WriteLine();
+                Console.WriteLine("0. 다음");
+            }
+
+            if (false)
+            {
+                Console.Clear();
+                Console.WriteLine("Battle!! - Result!");
+                Console.WriteLine();
+                Console.WriteLine("You Lose");
+                Console.WriteLine();
+                Console.WriteLine("Lv. {0} {1}");
+                Console.WriteLine("HP {0} -> 0");
+                Console.WriteLine();
+                Console.WriteLine("0. 다음");
+            }
+
+            // Get User Input and change scene
 
             return scene;
         }
