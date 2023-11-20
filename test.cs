@@ -2,9 +2,9 @@
 {
     internal class test
     {
-		public void won()
-		{
-			return 0;
-		}
+        public int awcqwckasdjifhi(int a)
+        {
+            return a;
+        }
     }
 }
