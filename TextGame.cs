@@ -16,7 +16,6 @@ namespace Team01DungeonGame
         private List<Item> _items;
 
         private GameScene _scene;
-        private BattleScene _battleScene;
 
         public void PlayText()
         {
