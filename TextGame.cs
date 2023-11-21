@@ -6,8 +6,8 @@ namespace Team01DungeonGame
     {
         enum Scene
         {
-            main, status, inventory, market, rest, dungeon, stagePick,
-            equipment, buy, sell, kill, Healing
+            main, status, inventory, market, rest, healing, dungeon, stagePick,
+            equipment, buy, sell, kill
         }
 
         private Scene _scene;
@@ -18,8 +18,6 @@ namespace Team01DungeonGame
         private List<Item> _items;
 
         private Battle _battle;
-
-        
 
         public void PlayText()
         {
@@ -35,7 +33,7 @@ namespace Team01DungeonGame
         private void IntroScene()
         {
             bool ValidName = false;
-            string userName = "name";
+            string userName = "username";
             JobType userJob = JobType.human;
 
             Clear();
@@ -84,12 +82,13 @@ namespace Team01DungeonGame
             _items.Add(new Item("종이칼", "맨주먹이 나을 것 같습니다", EquipType.oneHand, -5, 0, 0, 50));
             _items.Add(new Item("종이방패", "맨손으로 막는 게 나을 것 같습니다.", EquipType.oneHand, 0, -5, 0, 50));
 
-
             _items.Add(new Item("짱돌", "잘 다듬어져서 던지기 좋습니다", EquipType.oneHand, 2, 0, 0, 10));
-            _items.Add(new Item("철광석", "불순물이 섞인 철광석입니다", EquipType.material, 1, 0, 0, 100));
-            _items.Add(new Item("소다회", "각종 식물을 태운 뒤 정제한 소다회입니다", EquipType.material, 1, 0, 0, 100));
-            _items.Add(new Item("소금", "각종 식물을 태운 뒤 정제한 소다회입니다", EquipType.material, 1, 0, 0, 100));
-            _items.Add(new Item("올리브", "당신이 아는 그 올리브 열매입니다.", EquipType.material, 1, 0, 0, 100));
+            _items.Add(new Item("철광석", "불순물이 섞인 철광석입니다", EquipType.material, 0, 0, 0, 100));
+            _items.Add(new Item("소다회", "각종 식물을 태운 뒤 정제한 소다회입니다", EquipType.material, 0, 0, 0, 100));
+            _items.Add(new Item("소금", "각종 식물을 태운 뒤 정제한 소다회입니다", EquipType.material, 0, 0, 0, 100));
+            _items.Add(new Item("올리브", "당신이 아는 그 올리브 열매입니다.", EquipType.material, 0, 0, 0, 100));
+            _items.Add(new Item("체력 포션", "HP를 30 회복합니다.", EquipType.potion, 0, 0, 0, 500, false));
+            _items.Add(new Item("마나 포션", "MP를 30 회복합니다.", EquipType.potion, 0, 0, 0, 500, false));
 
             // 상인 정보 세팅
             _merchant = new Character("jeire", JobType.human);
@@ -104,6 +103,11 @@ namespace Team01DungeonGame
             _player.AddItem(_items[2]);
             _player.AddItem(_items[3]);
             _player.AddItem(_items[4]);
+            _player.AddItem(_items[10]);
+            _player.AddItem(_items[11]);
+
+            _player.Inventory[5].ItemCount = 3;
+            _player.Inventory[6].ItemCount = 3;
             _player.ToggleEquipStatus(0);
 
             // 상인 판매 품목 세팅
@@ -112,6 +116,8 @@ namespace Team01DungeonGame
             _merchant.AddItem(_items[7]);
             _merchant.AddItem(_items[8]);
             _merchant.AddItem(_items[9]);
+            _merchant.AddItem(_items[10]);
+            _merchant.AddItem(_items[11]);
         }
 
         private Scene SceneManager(Scene scene)
@@ -133,6 +139,9 @@ namespace Team01DungeonGame
                 case Scene.rest:
                     scene = RestScene();
                     break;
+                case Scene.healing:
+                    scene = HealingScene();
+                    break;
                 case Scene.dungeon:
                     scene = DungeonScene();
                     break;
@@ -149,9 +158,6 @@ namespace Team01DungeonGame
                     scene = SellScene();
                     break;
                 case Scene.kill:
-                    break;
-                case Scene.Healing:
-                    scene = HealingScene();
                     break;
             }
             return scene;
@@ -193,7 +199,7 @@ namespace Team01DungeonGame
                     scene = Scene.dungeon;
                     break;
                 case 6:
-                    scene = Scene.Healing;
+                    scene = Scene.healing;
                     break;
                 case 9:
                     scene = Scene.kill;
@@ -231,7 +237,7 @@ namespace Team01DungeonGame
             PrintwithColoredText(" 마력   : ", $"{_player.MP + Item.MPBonus} / {_player.MaxMP + Item.MPBonus}", bonusMP);
 
             PrintwithColoredText(" Gold   : ", _player.Gold.ToString(), "G");
-
+            
             WriteLine();
             WriteLine(" 0. 나가기");
             WriteLine();
@@ -269,7 +275,7 @@ namespace Team01DungeonGame
             WriteLine();
             WriteLine(" 원하시는 행동을 입력해주세요.");
 
-            switch (CheckValidInput(0, inventoryCount))
+            switch (CheckValidInput(0, 1))
             {
                 case 0:
                     scene = Scene.main;
@@ -289,7 +295,7 @@ namespace Team01DungeonGame
             WriteLine();
             PrintColoredText(" 인벤토리 - 장착 관리");
             WriteLine(" 아이템 장착을 관리할 수 있습니다.");
-            WriteLine("");
+            WriteLine();
             WriteLine(" [아이템 목록]");
 
             int inventoryCount = _player.Inventory.Count;
@@ -432,7 +438,7 @@ namespace Team01DungeonGame
                     break;
                 default:
                     _player.Gold += (int)(_player.Inventory[input - 1].Cost * 0.85f);
-                    _player.SubtractItem(_player.Inventory[input - 1]);
+                    _player.SubtractItem(_player.Inventory[input - 1].Name);
 
                     scene = Scene.sell;
                     break;
@@ -450,6 +456,9 @@ namespace Team01DungeonGame
             PrintwithColoredText(" ", "500", " G 를 내면 체력을 회복할 수 있습니다.");
             PrintwithColoredText(" (보유 골드 : ", $"{_player.Gold}", " G)");
             WriteLine();
+            WriteLine($" 체력: {_player.HP} / {_player.MaxHP + Item.HPBonus}");
+            WriteLine($" 마나: {_player.MP} / {_player.MaxMP + Item.MPBonus}");
+            WriteLine();
             WriteLine(" 1. 휴식하기");
             WriteLine(" 0. 나가기");
             WriteLine();
@@ -463,34 +472,69 @@ namespace Team01DungeonGame
                 case 1:
                     if (_player.Gold >= 500)
                     {
-                        _player.HP = 100;
+                        _player.HP = _player.MaxHP + Item.HPBonus;
+                        _player.MP = _player.MaxMP + Item.MPBonus;
                         _player.Gold -= 500;
                         WriteLine(" 휴식을 완료했습니다.");
-                        Thread.Sleep(3000);
+                        WriteLine();
+                        WriteLine(" 0. 다음");
+
+                        CheckValidInput(0, 0);
+
                         scene = Scene.rest;
                     }
                     else
                     {
                         WriteLine(" Gold가 부족합니다.");
-                        Thread.Sleep(3000);
+                        WriteLine();
+                        WriteLine(" 0. 다음");
+
+                        CheckValidInput(0, 0);
+
                         scene = Scene.rest;
                     }
                     break;
             }
+
+
             return scene;
         }
+
         private Scene HealingScene()
         {
             Scene scene = Scene.main;
+            bool isUsed;
+            int countHP = 0;
+            int countMP = 0;
+
+            int indexHP = _player.ItemIndex("체력 포션");
+            if (indexHP >= 0)
+            {
+                countHP = _player.Inventory[indexHP].ItemCount;
+            }
+            else
+            {
+                countHP = 0;
+            }
+
+            int indexMP = _player.ItemIndex("마나 포션");
+            if (indexMP >= 0)
+            {
+                countMP = _player.Inventory[indexMP].ItemCount;
+            }
+            else
+            {
+                countMP = 0;
+            }
 
             Clear();
             WriteLine();
             PrintColoredText(" 힐링 아이템");
             WriteLine(" 포션을 사용하면 30 회복 할 수 있습니다.");
-            WriteLine($" 체력 포션 {_player.healPotion} 개 / 마나 포션 {_player.manaPotion}");
+            WriteLine($" 체력 포션 {countHP} 개 / 마나 포션 {countMP}");
             WriteLine();
-            WriteLine($" 체력: {_player.HP}/{_player.MaxHP}");
-            WriteLine($" 마나: {_player.MP}/{_player.MaxMP}");
+            WriteLine($" 체력: {_player.HP} / {_player.MaxHP + Item.HPBonus}");
+            WriteLine($" 마나: {_player.MP} / {_player.MaxMP + Item.MPBonus}");
             WriteLine();
             WriteLine(" 1. 체력 포션");
             WriteLine(" 2. 마나 포션");
@@ -504,52 +548,24 @@ namespace Team01DungeonGame
                     scene = Scene.main;
                     break;
                 case 1:
-                    if(_player.healPotion > 0)
-                    {
-                        _player.HP += 30;
-                        if (_player.HP > _player.MaxHP)
-                        {
-                            _player.HP = _player.MaxHP;
-                        }
-                        _player.healPotion--;
-                        Clear();
-                        WriteLine();
-                        WriteLine(" 체력 포션을 사용했습니다.");
-                        WriteLine($" 현재 체력: {_player.HP}/{_player.MaxHP}");
-                        ReadKey(true);
-                    }
-                    else
-                    {
-                        Clear();
-                        WriteLine();
-                        WriteLine(" 체력 포션이 부족합니다.");
-                        ReadKey(true);
-                    }
-                    scene = Scene.Healing;
+                    isUsed = _player.UseHealPotion();
+
+                    WriteLine();
+                    WriteLine(" 0. 다음");
+
+                    CheckValidInput(0, 0);
+
+                    scene = Scene.healing;
                     break;
                 case 2:
-                    if (_player.manaPotion > 0)
-                    {
-                        _player.MP += 30;
-                        if (_player.MP > _player.MaxMP)
-                        {
-                            _player.MP = _player.MaxMP;
-                        }
-                        _player.manaPotion--;
-                        Clear();
-                        WriteLine();
-                        WriteLine(" 마나 포션을 사용했습니다.");
-                        WriteLine($" 현재 체력: {_player.MP}/{_player.MaxMP}");
-                        ReadKey(true);
-                    }
-                    else
-                    {
-                        Clear();
-                        WriteLine();
-                        WriteLine(" 마나 포션이 부족합니다.");
-                        ReadKey(true);
-                    }
-                    scene = Scene.Healing;
+                    isUsed = _player.UseManaPotion();
+
+                    WriteLine();
+                    WriteLine(" 0. 다음");
+
+                    CheckValidInput(0, 0);
+
+                    scene = Scene.healing;
                     break;
             }
             return scene;
@@ -576,8 +592,10 @@ namespace Team01DungeonGame
                 case 1:
                     if (_player.HP == 0)
                     {
-                        WriteLine("체력이 없습니다. 체력을 회복하고 시도해주세요");
-                        Thread.Sleep(3000);
+                        WriteLine(" 체력이 없습니다. 체력을 회복하고 시도해주세요");
+                        WriteLine();
+                        WriteLine(" 0. 돌아가기");
+                        CheckValidInput(0, 0);
                         scene = Scene.dungeon;
                     }
                     else
@@ -611,8 +629,8 @@ namespace Team01DungeonGame
                     break;
                 default:
                     Battle battle = new Battle(userInput, _player);
-                    scene = Scene.stagePick;
                     battle.PlayBattle();
+                    scene = Scene.stagePick;
                     break;
             }
             return scene;
@@ -637,7 +655,7 @@ namespace Team01DungeonGame
                 }
                 else
                 {
-                    if (input == "iamdeveloper")
+                    if(input == "iam")
                     {
                         return (int)JobType.developer + 1;
                     }
