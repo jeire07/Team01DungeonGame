@@ -116,6 +116,11 @@ namespace Team01DungeonGame
                 Item.DefBonus += Inventory[idx].Def;
                 Item.HPBonus  += Inventory[idx].HP;
 
+                if(HP > (MaxHP + Item.HPBonus))
+                {
+                    HP = MaxHP + Item.HPBonus;
+                }
+
                 Inventory[idx].IsEquipped = true;
             }
         }
@@ -178,6 +183,7 @@ namespace Team01DungeonGame
             {
                 SubtractItem("체력 포션");
 
+                IsAlive = true;
                 HP += 30;
                 if (HP > (MaxHP + Item.HPBonus))
                 {
@@ -187,15 +193,15 @@ namespace Team01DungeonGame
                 Clear();
                 WriteLine();
                 WriteLine(" 체력 포션을 사용했습니다.");
-                WriteLine($" 현재 체력: {HP}/{MaxHP}");
+                WriteLine($" 현재 체력: {HP} / {MaxHP}");
 
                 return true;
             }
             else
             {
                 Clear();
-                WriteLine(" 체력 포션이 없니다.");
-                WriteLine($" 현재 체력: {HP}/{MaxHP}");
+                WriteLine(" 체력 포션이 없습니다.");
+                WriteLine($" 현재 체력: {HP} / {MaxHP}");
 
                 return false;
             }
@@ -216,7 +222,7 @@ namespace Team01DungeonGame
                 Clear();
                 WriteLine();
                 WriteLine(" 마나 포션을 사용했습니다.");
-                WriteLine($" 현재 체력: {MP}/{MaxMP}");
+                WriteLine($" 현재 체력: {MP} / {MaxMP}");
 
                 return true;
             }
@@ -224,7 +230,7 @@ namespace Team01DungeonGame
             {
                 Clear();
                 WriteLine("마나 포션이 없습니다.");
-                WriteLine($" 현재 체력: {MP}/{MaxMP}");
+                WriteLine($" 현재 체력: {MP} / {MaxMP}");
 
                 return false;
             }
@@ -235,18 +241,19 @@ namespace Team01DungeonGame
             if (damage >= Def)
             {
                 damage -= Def;
+
+                if (damage > HP)
+                {
+                    damage = HP;
+                }
                 HP -= damage;
             }
 
-            if (HP < 0)
+            if (HP <= 0)
             {
                 IsAlive = false;
-                return 0;
             }
-            else
-            {
-                return damage;
-            }
+            return damage;
         }
 
         public void CharacterInfo()
