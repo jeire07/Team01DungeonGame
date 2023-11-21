@@ -490,6 +490,7 @@ namespace Team01DungeonGame
                 if (_player.IsAlive == false)
                 {
                     scene = Scene.defeat;
+                    break;
                 }
             }
             return scene;
