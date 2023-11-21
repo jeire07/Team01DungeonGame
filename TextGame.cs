@@ -233,8 +233,8 @@ namespace Team01DungeonGame
 
             PrintwithColoredText(" 공격력 : ", (_player.Atk + Item.AtkBonus).ToString(), bonusAtk);
             PrintwithColoredText(" 방어력 : ", (_player.Def + Item.DefBonus).ToString(), bonusDef);
-            PrintwithColoredText(" 체력   : ", $"{_player.HP + Item.HPBonus} / {_player.MaxHP + Item.HPBonus}", bonusHP);
-            PrintwithColoredText(" 마력   : ", $"{_player.MP + Item.MPBonus} / {_player.MaxMP + Item.MPBonus}", bonusMP);
+            PrintwithColoredText(" 체력   : ", $"{_player.HP} / {_player.MaxHP + Item.HPBonus}", bonusHP);
+            PrintwithColoredText(" 마력   : ", $"{_player.MP} / {_player.MaxMP + Item.MPBonus}", bonusMP);
 
             PrintwithColoredText(" Gold   : ", _player.Gold.ToString(), "G");
             
