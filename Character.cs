@@ -194,7 +194,7 @@ namespace Team01DungeonGame
             else
             {
                 Clear();
-                WriteLine(" 체력 포션이 없니다.");
+                WriteLine(" 체력 포션이 없습니다.");
                 WriteLine($" 현재 체력: {HP}/{MaxHP}");
 
                 return false;
