@@ -19,7 +19,7 @@ namespace Team01DungeonGame
         public int Cost { get; }
         public bool Equipable { get; }
         public bool IsEquipped { get; set; }
-        public int Count { get; set; }
+        public int ItemCount { get; set; }
         public static int AtkBonus { get; set; }
         public static int DefBonus { get; set; }
         public static int HPBonus { get; set; }
@@ -39,7 +39,7 @@ namespace Team01DungeonGame
             Cost = gold;
             Equipable = equipable;
             IsEquipped = equipped;
-            Count = count;
+            ItemCount = count;
             AtkBonus = atkBonus;
             DefBonus = defBonus;
             HPBonus = hpBonus;
@@ -50,7 +50,7 @@ namespace Team01DungeonGame
             if (withNumber)
             {
                 ForegroundColor = ConsoleColor.DarkMagenta;
-                Write($"{idx.ToString("00")} ");
+                Write($" {idx.ToString("00")}");
                 ResetColor();
             }
 
@@ -70,6 +70,7 @@ namespace Team01DungeonGame
             Write(PadRightStat("Atk", Atk, "", 10));
             Write(PadRightStat("Def", Def, "", 10));
             Write(PadRightStat("HP", HP, "", 10));
+            Write(PadRightStat("", ItemCount, "개", 10));
             Write(PadRightStat("", Cost, " G", 12));
             WriteLine($" | {Description}");
         }
