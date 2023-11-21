@@ -307,8 +307,8 @@ namespace Team01DungeonGame
         {
             Scene scene = Scene.playerEnd;
             bool isUsed;
-            int countHP = 0;
-            int countMP = 0;
+            int countHP;
+            int countMP;
 
             int indexHP = _player.ItemIndex("체력 포션");
             if(indexHP >= 0)
@@ -487,6 +487,7 @@ namespace Team01DungeonGame
                 if (_player.IsAlive == false)
                 {
                     scene = Scene.defeat;
+                    break;
                 }
             }
             return scene;

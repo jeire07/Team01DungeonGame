@@ -504,8 +504,8 @@ namespace Team01DungeonGame
         {
             Scene scene = Scene.main;
             bool isUsed;
-            int countHP = 0;
-            int countMP = 0;
+            int countHP;
+            int countMP;
 
             int indexHP = _player.ItemIndex("체력 포션");
             if (indexHP >= 0)
