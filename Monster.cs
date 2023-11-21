@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using static System.Console;
+﻿using static System.Console;
 
 namespace Team01DungeonGame
 {
@@ -12,8 +11,7 @@ namespace Team01DungeonGame
         public string Name { get; set; }
         public int Atk { get; set; }
         public int Def { get; set; }
-        public int BEFORE_HP { get; set; }
-        public int AFTER_HP { get; set; }
+        public int HP { get; set; }
         public int MaxHP { get; set; }
         public int Gold { get; set; }
         public bool IsAlive { get; set; }
@@ -31,8 +29,7 @@ namespace Team01DungeonGame
                     Name = "미니언";
                     Atk = 5 + level;
                     Def = 0;
-                    BEFORE_HP = 15 + level;
-                    AFTER_HP = 15 + level;
+                    HP = 15 + level;
                     MaxHP = 15 + level;
                     Gold = 20 + level;
                     break;
@@ -40,8 +37,7 @@ namespace Team01DungeonGame
                     Name = "공허충";
                     Atk = 9 + level;
                     Def = 0;
-                    BEFORE_HP = 10 + level;
-                    AFTER_HP = 15 + level;
+                    HP = 10 + level;
                     MaxHP = 10 + level;
                     Gold = 15 + level;
                     break;
@@ -49,8 +45,7 @@ namespace Team01DungeonGame
                     Name = "대포미니언";
                     Atk = 8 + level;
                     Def = 0;
-                    BEFORE_HP = 25 + level;
-                    AFTER_HP = 15 + level;
+                    HP = 25 + level;
                     MaxHP = 25 + level;
                     Gold = 33 + level;
                     break;
@@ -59,15 +54,22 @@ namespace Team01DungeonGame
             IsAlive = true;
         }
 
-        public void TakeDamage(int damage)
+        public int TakeDamage(int damage)
         {
-            AFTER_HP = BEFORE_HP - Def;
-            AFTER_HP -= damage;
-
-            if (AFTER_HP <= 0)
+            if (damage >= Def)
             {
-                AFTER_HP = 0;
+                damage -= Def;
+                HP -= damage;
+            }
+
+            if (HP < 0)
+            {
                 IsAlive = false;
+                return 0;
+            }
+            else
+            {
+                return damage;
             }
         }
 
@@ -88,7 +90,7 @@ namespace Team01DungeonGame
 
                     Write($"{Name} HP ");
                     ForegroundColor = ConsoleColor.Yellow;
-                    WriteLine($"{BEFORE_HP} / {MaxHP}");
+                    WriteLine($"{HP} / {MaxHP}");
                     ResetColor();
                 }
                 else
@@ -100,7 +102,7 @@ namespace Team01DungeonGame
 
                     Write($"{Name} HP ");
                     ForegroundColor = ConsoleColor.Yellow;
-                    WriteLine($"{BEFORE_HP} / {MaxHP}");
+                    WriteLine($"{HP} / {MaxHP}");
                     ResetColor();
                 }
             }
