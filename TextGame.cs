@@ -475,6 +475,8 @@ namespace Team01DungeonGame
                         _player.HP = _player.MaxHP + Item.HPBonus;
                         _player.MP = _player.MaxMP + Item.MPBonus;
                         _player.Gold -= 500;
+                        _player.IsAlive = true;
+
                         WriteLine(" 휴식을 완료했습니다.");
                         WriteLine();
                         WriteLine(" 0. 다음");
@@ -503,7 +505,6 @@ namespace Team01DungeonGame
         private Scene HealingScene()
         {
             Scene scene = Scene.main;
-            bool isUsed;
             int countHP;
             int countMP;
 
@@ -548,7 +549,7 @@ namespace Team01DungeonGame
                     scene = Scene.main;
                     break;
                 case 1:
-                    isUsed = _player.UseHealPotion();
+                    _player.UseHealPotion();
 
                     WriteLine();
                     WriteLine(" 0. 다음");
@@ -558,7 +559,7 @@ namespace Team01DungeonGame
                     scene = Scene.healing;
                     break;
                 case 2:
-                    isUsed = _player.UseManaPotion();
+                    _player.UseManaPotion();
 
                     WriteLine();
                     WriteLine(" 0. 다음");
