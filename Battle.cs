@@ -340,7 +340,7 @@ namespace Team01DungeonGame
             WriteLine($" 체력 포션 {countHP} 개 / 마나 포션 {countMP}");
             WriteLine();
             WriteLine($" 체력: {_player.HP} / {_player.MaxHP}");
-            WriteLine($" 마나: {_player.MP}/ {_player.MaxMP}");
+            WriteLine($" 마나: {_player.MP} / {_player.MaxMP}");
             WriteLine();
             WriteLine(" 1. 체력 포션");
             WriteLine(" 2. 마나 포션");
