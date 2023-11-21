@@ -137,7 +137,7 @@ namespace Team01DungeonGame
                     scene = DungeonScene();
                     break;
                 case Scene.stagePick:
-                    StagePickScene();
+                    scene = StagePickScene();
                     break;
                 case Scene.equipment:
                     scene = EquipmentScene();
@@ -611,8 +611,8 @@ namespace Team01DungeonGame
                     break;
                 default:
                     Battle battle = new Battle(userInput, _player);
-                    battle.PlayBattle();
                     scene = Scene.stagePick;
+                    battle.PlayBattle();
                     break;
             }
             return scene;

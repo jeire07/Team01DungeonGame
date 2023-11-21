@@ -1,4 +1,5 @@
 ﻿using static System.Console;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Team01DungeonGame
 {
@@ -6,7 +7,7 @@ namespace Team01DungeonGame
     {
         enum Scene
         {
-            playerPick, playerAtk, playerSkill, playerEnd, monster, result, exitDungeon, Healing
+            playerPick, playerAtk, playerSkill, playerEnd, monster, victory, defeat, run, exitDungeon, Healing
         }
 
         enum AtkEffect { normal, critical, avoid }
@@ -19,6 +20,7 @@ namespace Team01DungeonGame
         private AtkEffect isCritOrAvoid = AtkEffect.normal;
         private int _playerDamage = 0;
         private int _monsterIdx = 0;
+        private int _enterHp = 0;
 
         
 
@@ -73,6 +75,7 @@ namespace Team01DungeonGame
 
         public void PlayBattle()
         {
+            _enterHp = _player.HP;
             Scene scene = Scene.playerPick; //초기 장면 설정
             while (scene != Scene.exitDungeon)  //exitDungeon 장면 나올떄까지 반복
             {
@@ -99,8 +102,14 @@ namespace Team01DungeonGame
                 case Scene.monster:
                     scene = MonsterScene();
                     break;
-                case Scene.result:
-                    scene = ResultScene();
+                case Scene.victory:
+                    scene = VictoryScene();
+                    break;
+                case Scene.defeat:
+                    scene = DefeatScene();
+                    break;
+                case Scene.run:
+                    scene = RunScene();
                     break;
                 case Scene.Healing:
                     scene = BattleHealingScene();
@@ -143,7 +152,7 @@ namespace Team01DungeonGame
             switch (input)
             {
                 case 0:
-                    scene = Scene.result;   // 도망가기를 선택하면 전투 결과로 이동
+                    scene = Scene.run;   // 도망가기를 선택하면 전투 결과로 이동
                     break;
                 case 1:
                     scene = Scene.playerAtk;    // 기본 공격을 선택하면 플레이어의 공격 장면으로 이동
@@ -334,10 +343,13 @@ namespace Team01DungeonGame
             WriteLine();
             WriteLine($" Lv.{monster.Level} {monster.Name}");
             WriteLine($" {monster.Def} 방어");
-            _playerDamage -= monster.Def;
-            WriteLine($" HP {monster.HP} -> {monster.HP - _playerDamage}");
-            monster.HP -= _playerDamage;
+            
+            WriteLine($" HP {monster.BEFORE_HP} -> {monster.AFTER_HP}");
             WriteLine();
+
+            WriteLine(" 0. 다음");
+
+            monster.BEFORE_HP = monster.AFTER_HP;
 
             foreach (Monster checkAlive in _monsters)
             {
@@ -346,12 +358,9 @@ namespace Team01DungeonGame
                     scene = Scene.monster;
                     break;
                 }
-                else
-                {
-                    scene = Scene.result;
-                }
+                
+                scene = Scene.victory; // 살아있는 몬스터 없는 경우
             }
-            WriteLine(" 0. 다음");
 
             CheckValidInput(0, 0);
 
@@ -391,53 +400,72 @@ namespace Team01DungeonGame
                     Write(" >> ");
 
                     CheckValidInput(0, 0);
-                }
 
-                if (_player.IsAlive == false)
-                {
-                    scene = Scene.result;
+                    if (_player.IsAlive == false)
+                    {
+                        scene = Scene.defeat;
+                    }
                 }
             }
             return scene;
         }
 
-        private Scene ResultScene()
+        private Scene VictoryScene()
         {
             Scene scene = Scene.playerPick;
             Clear();
 
             // FIXME : Highlighted texts
 
-            if (true)
-            {
-                Clear();
-                WriteLine("Battle!! - Result!");
-                WriteLine();
-                WriteLine("Victory");
-                WriteLine();
-                WriteLine("던전에서 몬스터 {0}마리를 잡았습니다.");
-                WriteLine();
-                WriteLine("Lv. {0} {1}");
-                WriteLine("HP {0} -> {1}");
-                WriteLine();
-                WriteLine("0. 다음");
-            }
-            else
-            {
-                Clear();
-                WriteLine("Battle!! - Result!");
-                WriteLine();
-                WriteLine("You Lose");
-                WriteLine();
-                WriteLine("Lv. {0} {1}");
-                WriteLine("HP {0} -> 0");
-                WriteLine();
-                WriteLine("0. 다음");
-            }
+            PrintColoredText("Battle!! - Result!");
+            WriteLine();
+            PrintwithColoredText("","Victory","");
+            WriteLine();
+            WriteLine("던전에서 몬스터 {0}마리를 잡았습니다.", _monsterCount);
+            WriteLine();
+            WriteLine("Lv. {0} {1}", _player.Level, _player.Name);
+            WriteLine("HP {0} -> {1}", _enterHp, _player.HP);
+            WriteLine();
+            WriteLine("0. 다음");
 
-            // Get
-            //
-            // Input and change scene
+            CheckValidInput(0, 0);
+            scene = Scene.exitDungeon;
+
+            return scene;
+        }
+
+        private Scene DefeatScene()
+        {
+            Scene scene;
+
+            Clear();
+            PrintColoredText("Battle!! - Result!");
+            WriteLine();
+            PrintwithColoredText("", "You Lose", "");
+            WriteLine();
+            WriteLine("Lv. {0} {1}", _player.Level, _player.Name);
+            WriteLine("HP {0} -> 0", _enterHp);
+            WriteLine();
+            WriteLine("0. 다음");
+
+            CheckValidInput(0, 0);
+            scene = Scene.exitDungeon;
+
+            return scene;
+        }
+
+        private Scene RunScene()
+        {
+            Scene scene = Scene.exitDungeon;
+
+            Clear();
+            WriteLine("");
+            PrintColoredText($"{_player.Name}은/는 무사히 도망쳤다.");
+            WriteLine("");
+            WriteLine("0. 다음");
+
+            CheckValidInput(0, 0);
+            scene = Scene.exitDungeon;
 
             return scene;
         }
