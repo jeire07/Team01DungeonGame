@@ -237,16 +237,17 @@ namespace Team01DungeonGame
                 damage -= Def;
                 HP -= damage;
             }
-
-            if (HP < 0)
-            {
-                IsAlive = false;
-                return 0;
-            }
             else
             {
-                return damage;
+                return 0;
             }
+
+            if (HP <= 0)
+            {
+                HP = 0;
+                IsAlive = false;
+            }
+            return damage;
         }
 
         public void CharacterInfo()
