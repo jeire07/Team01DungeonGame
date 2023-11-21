@@ -24,11 +24,11 @@ namespace Team01DungeonGame
 
         public Battle(int stage, Character player)
         {
-            Stage = stage;
-            _player = player;
-            _monsters = new List<Monster>();
-            MakeStage();
-            _monsterCount = _monsters.Count;
+            Stage = stage;  //전투 스테이지 설정
+            _player = player;   //플레이어 설정
+            _monsters = new List<Monster>();    //몬스터 리스트 초기화
+            MakeStage();    //스테이지 생성
+            _monsterCount = _monsters.Count;    //생성된 몬스터 수 설정
         }
 
         private void MakeStage()
@@ -73,10 +73,10 @@ namespace Team01DungeonGame
 
         public void PlayBattle()
         {
-            Scene scene = Scene.playerPick;
-            while (scene != Scene.exitDungeon)
+            Scene scene = Scene.playerPick; //초기 장면 설정
+            while (scene != Scene.exitDungeon)  //exitDungeon 장면 나올떄까지 반복
             {
-                scene = SceneManager(scene);
+                scene = SceneManager(scene); //현재 장면을 SceneManager로 전달하여 다음 장면을 얻음
             }
         }
 
@@ -111,8 +111,8 @@ namespace Team01DungeonGame
 
         private Scene PlayerPickScene()
         {
-            Scene scene = 0;
-            Clear();
+            Scene scene = 0; // 초기 장면 설정
+            Clear();        // 콘솔 화면을 지움
 
             WriteLine();
             PrintColoredText(" Battle!!");
@@ -121,12 +121,12 @@ namespace Team01DungeonGame
             int monsterCount = _monsters.Count;
             for (int i = 0; i < monsterCount; i++)
             {
-                _monsters[i].MonsterInfo(false, i + 1);
+                _monsters[i].MonsterInfo(false, i + 1); // 각 몬스터의 정보를 출력
             }
 
             WriteLine();
             WriteLine(" [내 정보]");
-            _player.CharacterInfo();
+            _player.CharacterInfo();        // 플레이어의 정보를 출력
 
             WriteLine();
             WriteLine(" 0. 도망가기");
@@ -137,23 +137,25 @@ namespace Team01DungeonGame
             WriteLine();
             WriteLine(" 원하시는 행동을 입력해주세요.");
 
+
             int input = CheckValidInput(0, 3);
+
             switch (input)
             {
                 case 0:
-                    scene = Scene.result;
+                    scene = Scene.result;   // 도망가기를 선택하면 전투 결과로 이동
                     break;
                 case 1:
-                    scene = Scene.playerAtk;
+                    scene = Scene.playerAtk;    // 기본 공격을 선택하면 플레이어의 공격 장면으로 이동
                     break;
                 case 2:
-                    scene = Scene.playerSkill;
+                    scene = Scene.playerSkill; // 스킬 공격을 선택하면 플레이어의 스킬 사용 장면으로 이동
                     break;
                 case 3:
                     scene = Scene.Healing;
                     break;
             }
-            return scene;
+            return scene;   // 다음으로 진행할 장면을 반환
         }
 
         private Scene PlayerAttackScene()
@@ -180,21 +182,21 @@ namespace Team01DungeonGame
             WriteLine();
             WriteLine(" 공격할 대상을 선택해주세요.");
 
-            int input = CheckMonsterInput(monsterCount);
+            int input = CheckMonsterInput(monsterCount);      // 몬스터 선택을 위한 입력을 받음
             switch (input)
             {
                 case 0:
-                    scene = Scene.playerPick;
+                    scene = Scene.playerPick;   // 나가기를 선택하면 플레이어 선택 장면으로 이동
                     break;
                 default:
-                    _playerDamage = PlayerDamage(_player.Atk + Item.AtkBonus, out isCritOrAvoid);
-                    _monsters[input - 1].TakeDamage(_playerDamage);
-                    _monsterIdx = input - 1;
-                    
-                    scene = Scene.playerEnd;
+                    _playerDamage = PlayerDamage(_player.Atk + Item.AtkBonus, out isCritOrAvoid); // 플레이어의 공격력을 계산
+                    _monsters[input - 1].TakeDamage(_playerDamage);  // 선택한 몬스터에게 플레이어의 공격력만큼 데미지를 입힘
+                    _monsterIdx = input - 1;    // 선택한 몬스터의 인덱스를 저장
+
+                    scene = Scene.playerEnd;    // 플레이어의 턴이 끝났음을 나타내는 장면으로 이동
                     break;
             }
-            return scene;
+            return scene;   // 다음으로 진행할 장면을 반환
         }
 
         private Scene PlayerSkillScene()
@@ -202,8 +204,93 @@ namespace Team01DungeonGame
             Scene scene = Scene.playerPick;
             Clear();
 
+            WriteLine();
+            PrintColoredText(" Battle!!");
+            WriteLine("");
+
+            int monsterCount = _monsters.Count;
+            for (int i = 0; i < monsterCount; i++)
+            {
+                _monsters[i].MonsterInfo(true, i + 1);
+            }
+
+            WriteLine();
+            WriteLine(" [내 정보]");
+            _player.CharacterInfo();
+
+            WriteLine();
+            WriteLine(" 1. 알파 스트라이크 - MP 10");
+            WriteLine("    공격력 * 2 로 하나의 적을 공격합니다.");
+            WriteLine(" 2. 더블 스트라이크 - MP 15");
+            WriteLine("    공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.");
+            WriteLine();
+            WriteLine(" 0. 나가기");
+            WriteLine();
+            WriteLine(" 사용할 스킬을 선택해주세요.");
+
+            int input = CheckMonsterInput(monsterCount);
+
+            //int input = CheckValidInput(0, 2);
+            switch (input)
+            {
+                case 0:
+                    scene = Scene.playerPick;
+                    break;
+                case 1:
+                    if (_player.MP >= 10)
+                    {
+                        _playerDamage = PlayerDamage((int)(_player.Atk * 1.5) + Item.AtkBonus, out isCritOrAvoid) * 2;
+                        _monsters[input - 1].TakeDamage(_playerDamage);
+                        _monsterIdx = input - 1;
+
+                        _player.MP -= 10;
+                        scene = Scene.playerEnd;
+                    }
+                    else
+                    {
+                        WriteLine(" MP가 부족합니다.");
+                        scene = Scene.playerEnd;
+                    }
+                    break;
+                case 2:
+                    if (_player.MP >= 10)
+                    {
+                        int numEnemiesToAttack = 2;  // 랜덤으로 선택할 적의 수
+
+                        for (int i = 0; i < numEnemiesToAttack; i++)
+                        {
+                            int randomEnemyIndex = RandommonsterIndex(monsterCount);
+                            _playerDamage = PlayerDamage((int)(_player.Atk * 1.5) + Item.AtkBonus, out isCritOrAvoid);
+                            _monsters[randomEnemyIndex].TakeDamage(_playerDamage);
+                            _monsterIdx = randomEnemyIndex;
+
+                            scene = Scene.playerEnd;
+                        }
+                        _player.MP -= 15;
+                    }
+                    else
+                    {
+                        WriteLine(" MP가 부족합니다.");
+                        scene = Scene.playerEnd;
+                    }
+                    break;
+                default:
+                    WriteLine(" 잘못된 입력입니다. 다시 입력해주세요");
+                    scene = Scene.playerEnd;
+                    break;
+            }
             return scene;
         }
+
+
+        private int RandommonsterIndex(int monsterCount)  //임의로 작성한 스킬랜덤지정 메소드
+        {
+            Random random = new Random();
+            return random.Next(0, monsterCount);
+        }
+
+
+
 
         private Scene PlayerEndScene()
         {
@@ -230,8 +317,8 @@ namespace Team01DungeonGame
             Monster monster = _monsters[_monsterIdx];
             Write($" Lv.{monster.Level} {monster.Name} 를(을) 맞췄습니다.");
             Write($"[데미지 : {_playerDamage}] - ");
-            
-            switch(isCritOrAvoid)
+
+            switch (isCritOrAvoid)
             {
                 case AtkEffect.normal:
                     WriteLine("기본 공격");
@@ -305,7 +392,7 @@ namespace Team01DungeonGame
 
                     CheckValidInput(0, 0);
                 }
-                    
+
                 if (_player.IsAlive == false)
                 {
                     scene = Scene.result;
