@@ -23,6 +23,9 @@ namespace Team01DungeonGame
         public List<Item> Inventory { get; }
         public Item[] Equips { get; }
 
+        public int healPotion { get; set; }
+        public int manaPotion { get; set; }
+
         public Character(string name, JobType job = JobType.human)
         {
             Name = name;
@@ -32,6 +35,8 @@ namespace Team01DungeonGame
             IsAlive = true;
             Exp = 0;
             MaxExp = 10;
+            healPotion = 3;
+            manaPotion = 3;
 
             Inventory = new List<Item>(20);
             Item[] Equips = new Item[9];

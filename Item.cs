@@ -74,36 +74,6 @@ namespace Team01DungeonGame
             WriteLine($" | {Description}");
         }
 
-        public class HPPotion
-        {
-            public string Name => "체력 포션";
-
-            public void Use(Character user)
-            {
-                WriteLine("체력 포션을 사용합니다. 체력이 50 증가합니다.");
-                user.HP += 30;
-                if (user.HP > (user.MaxHP + Item.HPBonus))
-                {
-                    user.HP = user.MaxHP + Item.HPBonus;
-                }
-            }
-        }
-
-        public class MPPotion
-        {
-            public string Name => "체력 포션";
-
-            public void Use(Character user)
-            {
-                WriteLine("체력 포션을 사용합니다. 체력이 50 증가합니다.");
-                user.HP += 30;
-                if (user.MP > (user.MaxMP + Item.MPBonus))
-                {
-                    user.MP = user.MaxMP + Item.MPBonus;
-                }
-            }
-        }
-
         public string PadRightStat(string text1, int value, string text2, int length)
         {
             string text = value >= 0 ? $" | {text1} +{value}{text2}" : $" | {text1} {value}{text2}";

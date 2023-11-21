@@ -6,7 +6,7 @@ namespace Team01DungeonGame
     {
         enum Scene
         {
-            playerPick, playerAtk, playerSkill, playerEnd, monster, result, exitDungeon
+            playerPick, playerAtk, playerSkill, playerEnd, monster, result, exitDungeon, Healing
         }
 
         enum AtkEffect { normal, critical, avoid }
@@ -19,6 +19,8 @@ namespace Team01DungeonGame
         private AtkEffect isCritOrAvoid = AtkEffect.normal;
         private int _playerDamage = 0;
         private int _monsterIdx = 0;
+
+        
 
         public Battle(int stage, Character player)
         {
@@ -99,6 +101,9 @@ namespace Team01DungeonGame
                     break;
                 case Scene.result:
                     scene = ResultScene();
+                    break;
+                case Scene.Healing:
+                    scene = BattleHealingScene();
                     break;
             }
             return scene;
@@ -338,7 +343,9 @@ namespace Team01DungeonGame
                 WriteLine("0. 다음");
             }
 
-            // Get User Input and change scene
+            // Get
+            //
+            // Input and change scene
 
             return scene;
         }
@@ -440,7 +447,83 @@ namespace Team01DungeonGame
                 }
             }
         }
+        private Scene BattleHealingScene()
+        {
+            Scene scene = Scene.playerEnd;
 
+            Clear();
+            WriteLine();
+            PrintColoredText(" 힐링 아이템");
+            WriteLine(" 포션을 사용하면 30 회복 할 수 있습니다.");
+            WriteLine($" 체력 포션 {_player.healPotion} 개 / 마나 포션 {_player.manaPotion}");
+            WriteLine();
+            WriteLine($" 체력: {_player.HP}/{_player.MaxHP}");
+            WriteLine($" 마나: {_player.MP}/{_player.MaxMP}");
+            WriteLine();
+            WriteLine(" 1. 체력 포션");
+            WriteLine(" 2. 마나 포션");
+            WriteLine(" 0. 나가기");
+            WriteLine();
+            WriteLine(" 원하시는 행동을 입력해주세요.");
+
+            switch (CheckValidInput(0, 2))
+            {
+                case 0:
+                    scene = Scene.playerPick;
+                    break;
+                case 1:
+                    if (_player.healPotion > 0)
+                    {
+                        _player.HP += 30;
+                        if (_player.HP > _player.MaxHP)
+                        {
+                            _player.HP = _player.MaxHP;
+                        }
+                        _player.healPotion--;
+                        Clear();
+                        WriteLine();
+                        WriteLine(" 체력 포션을 사용했습니다.");
+                        WriteLine($" 현재 체력: {_player.HP}/{_player.MaxHP}");
+                        ReadKey(true);
+                        scene = Scene.playerEnd;
+                    }
+                    else
+                    {
+                        Clear();
+                        WriteLine();
+                        WriteLine(" 체력 포션이 부족합니다.");
+                        ReadKey(true);
+                        scene = Scene.Healing;
+                    }
+                    break;
+                case 2:
+                    if (_player.manaPotion > 0)
+                    {
+                        _player.MP += 30;
+                        if (_player.MP > _player.MaxMP)
+                        {
+                            _player.MP = _player.MaxMP;
+                        }
+                        _player.manaPotion--;
+                        Clear();
+                        WriteLine();
+                        WriteLine(" 마나 포션을 사용했습니다.");
+                        WriteLine($" 현재 체력: {_player.MP}/{_player.MaxMP}");
+                        ReadKey(true);
+                        scene = Scene.playerEnd;
+                    }
+                    else
+                    {
+                        Clear();
+                        WriteLine();
+                        WriteLine(" 마나 포션이 부족합니다.");
+                        ReadKey(true);
+                        scene = Scene.Healing;
+                    }
+                    break;
+            }
+            return scene;
+        }
         private void PrintColoredText(string text,
             ConsoleColor color = ConsoleColor.Yellow)
         {
