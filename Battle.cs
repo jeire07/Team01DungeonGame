@@ -132,10 +132,12 @@ namespace Team01DungeonGame
             WriteLine(" 0. 도망가기");
             WriteLine(" 1. 기본 공격");
             WriteLine(" 2. 스킬 공격");
+            WriteLine(" 3. 포션 사용");
+
             WriteLine();
             WriteLine(" 원하시는 행동을 입력해주세요.");
 
-            int input = CheckValidInput(0, 2);
+            int input = CheckValidInput(0, 3);
             switch (input)
             {
                 case 0:
@@ -146,6 +148,9 @@ namespace Team01DungeonGame
                     break;
                 case 2:
                     scene = Scene.playerSkill;
+                    break;
+                case 3:
+                    scene = Scene.Healing;
                     break;
             }
             return scene;
