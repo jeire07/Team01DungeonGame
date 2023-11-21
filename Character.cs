@@ -23,9 +23,6 @@ namespace Team01DungeonGame
         public List<Item> Inventory { get; }
         public Item[] Equips { get; }
 
-        public int healPotion { get; set; }
-        public int manaPotion { get; set; }
-
         public Character(string name, JobType job = JobType.human)
         {
             Name = name;
@@ -35,8 +32,6 @@ namespace Team01DungeonGame
             IsAlive = true;
             Exp = 0;
             MaxExp = 10;
-            healPotion = 3;
-            manaPotion = 3;
 
             Inventory = new List<Item>(20);
             Item[] Equips = new Item[9];
@@ -54,22 +49,26 @@ namespace Team01DungeonGame
                 case JobType.warrior:
                     Atk = 15;
                     Def = 10;
+                    HP = 110;
                     MaxHP = 110;
+                    MP = 40;
                     MaxMP = 40;
                     break;
                 case JobType.mage:
                     Atk = 5;
                     Def = 0;
+                    HP = 90;
                     MaxHP = 90;
+                    MP = 100;
                     MaxMP = 100;
                     break;
                 case JobType.developer:
                     Level = 1000;
-                    Atk = 10000;
-                    Def = 10000;
-                    HP = 10000;
+                    Atk = 1000;
+                    Def = 1000;
+                    HP = 9000;
                     MaxHP = 10000;
-                    MP = 10000;
+                    MP = 9000;
                     MaxMP = 10000;
                     break;
             }
@@ -121,16 +120,16 @@ namespace Team01DungeonGame
             }
         }
 
-        public bool IsExist(Item item)
+        public int ItemIndex(string name)
         {
-            return Inventory.Any(item => item.Name == item.Name);
+            return Inventory.FindIndex(item => item.Name == name);
         }
 
         public void AddItem(Item item)
         {
-            if (IsExist(item) && !item.Equipable)
+            if ((ItemIndex(item.Name) != -1) && !item.Equipable)
             {
-                item.Count++;
+                item.ItemCount++;
             }
             else
             {
@@ -139,20 +138,22 @@ namespace Team01DungeonGame
             }
         }
 
-        public void SubtractItem(Item item)
+        public void SubtractItem(string name)
         {
-            if (!IsExist(item))
+            int index = ItemIndex(name);
+
+            if (index == -1)
             {
                 WriteLine("없는 아이템입니다.");
             }
-            else if (item.Count > 1)
+            else if (Inventory[index].ItemCount > 1)
             {
-                item.Count--;
+                Inventory[index].ItemCount--;
             }
             else
             {
-                item.IsEquipped = false;
-                Inventory.Remove(item);
+                Inventory[index].IsEquipped = false;
+                Inventory.Remove(Inventory[index]);
             }
         }
 
@@ -171,19 +172,80 @@ namespace Team01DungeonGame
             }
         }
 
+        public bool UseHealPotion()
+        {
+            if(ItemIndex("체력 포션") != -1)
+            {
+                SubtractItem("체력 포션");
+
+                HP += 30;
+                if (HP > (MaxHP + Item.HPBonus))
+                {
+                    HP = MaxHP + Item.HPBonus;
+                }
+
+                Clear();
+                WriteLine();
+                WriteLine(" 체력 포션을 사용했습니다.");
+                WriteLine($" 현재 체력: {HP}/{MaxHP}");
+
+                return true;
+            }
+            else
+            {
+                Clear();
+                WriteLine(" 체력 포션이 없니다.");
+                WriteLine($" 현재 체력: {HP}/{MaxHP}");
+
+                return false;
+            }
+        }
+
+        public bool UseManaPotion()
+        {
+            if (ItemIndex("마나 포션") != -1)
+            {
+                SubtractItem("마나 포션");
+
+                MP += 30;
+                if (MP > (MaxMP + Item.MPBonus))
+                {
+                    MP = MaxMP + Item.MPBonus;
+                }
+
+                Clear();
+                WriteLine();
+                WriteLine(" 마나 포션을 사용했습니다.");
+                WriteLine($" 현재 체력: {MP}/{MaxMP}");
+
+                return true;
+            }
+            else
+            {
+                Clear();
+                WriteLine("마나 포션이 없습니다.");
+                WriteLine($" 현재 체력: {MP}/{MaxMP}");
+
+                return false;
+            }
+        }
+
         public int TakeDamage(int damage)
         {
-            int hp = HP;
-            hp -= damage;
+            if (damage >= Def)
+            {
+                damage -= Def;
+                HP -= damage;
+            }
 
-            if (hp < 0)
+            if (HP < 0)
             {
                 IsAlive = false;
                 return 0;
             }
             else
             {
-                return hp;
+                return damage;
             }
         }
 
