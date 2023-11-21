@@ -59,18 +59,19 @@ namespace Team01DungeonGame
             if (damage >= Def)
             {
                 damage -= Def;
+
+                if (damage > HP)
+                {
+                    damage = HP;
+                }
                 HP -= damage;
             }
 
-            if (HP < 0)
+            if (HP <= 0)
             {
                 IsAlive = false;
-                return 0;
             }
-            else
-            {
-                return damage;
-            }
+            return damage;
         }
 
         public void MonsterInfo(bool withNumber = false, int idx = 0)
