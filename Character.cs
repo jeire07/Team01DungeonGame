@@ -193,7 +193,7 @@ namespace Team01DungeonGame
                 Clear();
                 WriteLine();
                 WriteLine(" 체력 포션을 사용했습니다.");
-                WriteLine($" 현재 체력: {HP} / {MaxHP}");
+                WriteLine($" 현재 체력: {HP} / {MaxHP + Item.HPBonus}");
 
                 return true;
             }
@@ -201,7 +201,7 @@ namespace Team01DungeonGame
             {
                 Clear();
                 WriteLine(" 체력 포션이 없습니다.");
-                WriteLine($" 현재 체력: {HP} / {MaxHP}");
+                WriteLine($" 현재 체력: {HP} / {MaxHP + Item.MPBonus}");
 
                 return false;
             }
@@ -222,7 +222,7 @@ namespace Team01DungeonGame
                 Clear();
                 WriteLine();
                 WriteLine(" 마나 포션을 사용했습니다.");
-                WriteLine($" 현재 체력: {MP} / {MaxMP}");
+                WriteLine($" 현재 체력: {MP} / {MaxMP + Item.MPBonus}");
 
                 return true;
             }
@@ -230,7 +230,7 @@ namespace Team01DungeonGame
             {
                 Clear();
                 WriteLine("마나 포션이 없습니다.");
-                WriteLine($" 현재 체력: {MP} / {MaxMP}");
+                WriteLine($" 현재 체력: {MP} / {MaxMP + Item.MPBonus}");
 
                 return false;
             }
@@ -268,12 +268,12 @@ namespace Team01DungeonGame
 
                 Write(" HP ");
                 ForegroundColor = ConsoleColor.Yellow;
-                WriteLine($"{HP} / {MaxHP}");
+                WriteLine($"{HP} / {MaxHP + Item.HPBonus}");
                 ResetColor();
 
                 Write(" MP ");
                 ForegroundColor = ConsoleColor.Yellow;
-                WriteLine($"{MP} / {MaxMP}");
+                WriteLine($"{MP} / {MaxMP + Item.MPBonus}");
                 ResetColor();
             }
             else  // when monster died
