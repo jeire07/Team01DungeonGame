@@ -645,8 +645,8 @@ namespace Team01DungeonGame
             Scene scene = Scene.playerPick;
             Clear();
 
-            // FIXME : Highlighted texts
-
+            WriteLine();
+            WriteLine("==============================================================");
             WriteLine();
             PrintColoredText(" Battle!! - Result!");
             WriteLine();
@@ -656,9 +656,12 @@ namespace Team01DungeonGame
             WriteLine();
             WriteLine(" Lv. {0} {1}", _player.Level, _player.Name);
             WriteLine(" HP {0} -> {1} / {2}", _enterHP, _player.HP, _player.MaxHP);
+            WriteLine();
+            WriteLine("==============================================================");
 
-            
 
+            WriteLine();
+            PrintColoredText(" 보상: ");
             WriteLine();
 
             WriteLine($" 경험치: + {_monsters.Count * Stage} ({_player.Exp + _monsters.Count * Stage} / {_player.MaxExp})");
