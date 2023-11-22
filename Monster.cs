@@ -74,6 +74,10 @@ namespace Team01DungeonGame
                 }
                 HP -= damage;
             }
+            else
+            {
+                damage = 0;
+            }
 
             if (HP <= 0)
             {
