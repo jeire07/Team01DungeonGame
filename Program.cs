@@ -1,6 +1,4 @@
-﻿using static System.Console;
-
-namespace Team01DungeonGame
+﻿namespace Team01DungeonGame
 {
     public class Program
     {
