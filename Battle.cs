@@ -471,6 +471,7 @@ namespace Team01DungeonGame
                     int damage = range.Next(minDamage, maxDamage);
                     damage = _player.TakeDamage(damage);
 
+                    WriteLine("==============================================================");
                     WriteLine("");
                     WriteLine(" Battle!!");
                     WriteLine();
@@ -480,7 +481,9 @@ namespace Team01DungeonGame
                     WriteLine($" Lv.{_player.Level} {_player.Name}");
                     WriteLine($" {_player.Def} 방어, 입은 피해 : {damage}");
                     WriteLine($" HP {_player.HP + damage} -> {_player.HP}");
-                    WriteLine();
+                    WriteLine("");
+                    WriteLine("==============================================================");
+                    WriteLine("");
                     WriteLine(" 0. 다음");
                     WriteLine("");
                     Write(" >> ");
