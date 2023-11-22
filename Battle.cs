@@ -71,14 +71,16 @@ namespace Team01DungeonGame
             }
         }
 
-        public void PlayBattle()
+        public int PlayBattle(int stage)
         {
+            Stage = stage;
             _enterHP = _player.HP;
             Scene scene = Scene.playerPick;
             while (scene != Scene.exitDungeon)
             {
                 scene = SceneManager(scene);
             }
+            return Stage;
         }
 
         private Scene SceneManager(Scene scene)
@@ -335,7 +337,7 @@ namespace Team01DungeonGame
             Clear();
             WriteLine();
             PrintColoredText(" 힐링 아이템");
-            WriteLine(" 포션을 사용하면 30 회복 할 수 있습니다.");
+            WriteLine(" 전투중에 포션을 사용하면 내 턴을 소비해서 30 포인트 회복 할 수 있습니다.");
             WriteLine($" 체력 포션 {countHP} 개 / 마나 포션 {countMP}");
             WriteLine();
             WriteLine($" 체력: {_player.HP} / {_player.MaxHP + Item.HPBonus}");
@@ -532,6 +534,7 @@ namespace Team01DungeonGame
 
             CheckValidInput(0, 0);
             scene = Scene.exitDungeon;
+            Stage++;
 
             return scene;
         }

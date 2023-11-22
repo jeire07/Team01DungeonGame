@@ -29,7 +29,6 @@ namespace Team01DungeonGame
             Name = name;
             Job = job;
             Level = 1;
-            Gold = 1500;
             IsAlive = true;
             Exp = 0;
             MaxExp = 10;
@@ -46,27 +45,30 @@ namespace Team01DungeonGame
             {
                 case JobType.human:
                     Atk = 10;
-                    Def = 5;
+                    Def = 3;
                     HP = 100;
                     MaxHP = 100;
                     MP = 50;
                     MaxMP = 50;
+                    Gold = 10;
                     break;
                 case JobType.warrior:
                     Atk = 15;
-                    Def = 10;
-                    HP = 110;
-                    MaxHP = 110;
+                    Def = 7;
+                    HP = 150;
+                    MaxHP = 150;
                     MP = 40;
                     MaxMP = 40;
+                    Gold = 1000;
                     break;
                 case JobType.mage:
                     Atk = 5;
-                    Def = 0;
-                    HP = 90;
-                    MaxHP = 90;
-                    MP = 100;
-                    MaxMP = 100;
+                    Def = 2;
+                    HP = 80;
+                    MaxHP = 80;
+                    MP = 500;
+                    MaxMP = 500;
+                    Gold = 50;
                     break;
                 case JobType.developer:
                     Level = 1000;
@@ -76,6 +78,7 @@ namespace Team01DungeonGame
                     MaxHP = 10000;
                     MP = 9000;
                     MaxMP = 10000;
+                    Gold = 50000;
                     break;
             }
         }
@@ -86,13 +89,13 @@ namespace Team01DungeonGame
             switch (Job)
             {
                 case JobType.human:
-                    jobName = "무직";
+                    jobName = "거지";
                     break;
                 case JobType.warrior:
-                    jobName = "전사";
+                    jobName = "바이킹";
                     break;
                 case JobType.mage:
-                    jobName = "마법사";
+                    jobName = "람쥐썬더";
                     break;
                 case JobType.developer:
                     jobName = "개발자";

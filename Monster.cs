@@ -26,7 +26,7 @@ namespace Team01DungeonGame
             switch (job)
             {
                 case MonsterType.minion:
-                    Name = "미니언";
+                    Name = "벌크업한 미니언";
                     Atk = 5 + level;
                     Def = 0;
                     HP = 15 + level;
@@ -34,7 +34,7 @@ namespace Team01DungeonGame
                     Gold = 20 + level;
                     break;
                 case MonsterType.insect:
-                    Name = "공허충";
+                    Name = "당랑권 사마귀";
                     Atk = 9 + level;
                     Def = 0;
                     HP = 10 + level;
@@ -42,7 +42,7 @@ namespace Team01DungeonGame
                     Gold = 15 + level;
                     break;
                 case MonsterType.canon:
-                    Name = "대포미니언";
+                    Name = "뚱뚱한 해적";
                     Atk = 8 + level;
                     Def = 0;
                     HP = 25 + level;

@@ -140,16 +140,16 @@ namespace Team01DungeonGame
         //    }
         //}
 
-        class Program
-        {
-            static void Main()
-            {
-                Player humanPlayer = new Player(JobType.human);
-                Player warriorPlayer = new Player(JobType.warrior);
-                Player magePlayer = new Player(JobType.mage);
-                Player developerPlayer = new Player(JobType.developer);
-            }
+        //class Program
+        //{
+        //    static void Main()
+        //    {
+        //        Player humanPlayer = new Player(JobType.human);
+        //        Player warriorPlayer = new Player(JobType.warrior);
+        //        Player magePlayer = new Player(JobType.mage);
+        //        Player developerPlayer = new Player(JobType.developer);
+        //    }
 
-        }
+        //}
     }
 }
