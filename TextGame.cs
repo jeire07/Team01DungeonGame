@@ -64,20 +64,19 @@ namespace Team01DungeonGame
                 WriteLine();
                 Write(" >> ");
                 userName = ReadLine() ?? "jeire";
-                if (userName.Length < 9 && userName.Length > 0)
+                if (userName.Length < 9)
                 {
                     ValidName = true;
                 }
                 else
                 {
                     WriteLine();
-                    WriteLine(" 이름을 0글자 이상 8글자 이내로 작성 해주세요.");
-                    WriteLine(" 이름이 없거나 너무 길면 부르기 힘들잖아요.");
+                    WriteLine(" 이름을 8글자 이내로 작성 해주세요.");
+                    WriteLine(" 너무 길면 부르기 힘들잖아요.");
                     WriteLine();
                     continue;
                 }
             }
-            Clear();
             WriteLine();
             WriteLine(" 이 세상을 살아가기 위해선 몸이 필요합니다.");
             WriteLine();
@@ -103,7 +102,7 @@ namespace Team01DungeonGame
             _items.Add(new Item("하얀 옷", "크기가 자유자제로 변합니다.", EquipType.body, 0, 1, 0, 0, 150));
             _items.Add(new Item("목장갑", "인부의 힘", EquipType.globes, 0, 0, 3, 0, 0));
             _items.Add(new Item("돌반지", "구멍을 어떻게 뚫었지?", EquipType.ring1, 0, 0, 5, 0, 50));
-            _items.Add(new Item("빨간 버튼", "눌러볼까?", EquipType.body, 0, 0, 0, 0, 0));
+            _items.Add(new Item("빨간 버튼", "눌러볼까?", EquipType.body, -5, -5, -20, 0, 0));
 
             _items.Add(new Item("짱돌", "잘 다듬어져서 던지기 좋습니다", EquipType.oneHand, 2, 0, 0, 0, 10));
             _items.Add(new Item("삿갓", "햇빛이 잘 막아집니다.", EquipType.head, 0, 2, 0, 0, 150));

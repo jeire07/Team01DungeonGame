@@ -1,4 +1,5 @@
-﻿using static System.Console;
+﻿using System.Drawing;
+using static System.Console;
 
 namespace Team01DungeonGame
 {
@@ -72,7 +73,7 @@ namespace Team01DungeonGame
                 case JobType.developer:
                     Level = 1000;
                     Atk = 1000;
-                    Def = 100;
+                    Def = 1000;
                     HP = 9000;
                     MaxHP = 10000;
                     MP = 9000;
@@ -125,37 +126,12 @@ namespace Team01DungeonGame
             {
                 if(Inventory[idx].Equipable)
                 {
-                    if (Inventory[idx].Name == "빨간 버튼")
-                    {
-                        Clear();
-                        WriteLine();
-                        WriteLine("==========================================");
-                        WriteLine("  갑자기 몸이 섬광처럼 빛나기 시작했다!");
-                        WriteLine("==========================================");
-                        Thread.Sleep(1000);
-                        WriteLine("    .    .    .    .    .    .    .  ");
-                        WriteLine("   ...  ...  ...  ...  ...  ...  ... ");
-                        WriteLine("  ...................................");
-                        WriteLine("   ...  ...  ...  ...  ...  ...  ... ");
-                        WriteLine("    .    .    .    .    .    .    .  \n");
-                        Thread.Sleep(3000);
-                        WriteLine("    그리고 형체를 찾을 수 없게 되었다.\n");
-                        Thread.Sleep(1000);
-                        WriteLine("              누르지 말껄...\n");
-                        Thread.Sleep(1000);
-                        WriteLine("               You Lose");
-                        Thread.Sleep(2000);
-                        Environment.Exit(0);
-                    }
-                    else
-                    {
-                        Item.AtkBonus += Inventory[idx].Atk;
-                        Item.DefBonus += Inventory[idx].Def;
-                        Item.HPBonus += Inventory[idx].HP;
-                        Item.MPBonus += Inventory[idx].MP;
-                        HP += Inventory[idx].HP;
-                        MP += Inventory[idx].MP;
-                    }
+                    Item.AtkBonus += Inventory[idx].Atk;
+                    Item.DefBonus += Inventory[idx].Def;
+                    Item.HPBonus  += Inventory[idx].HP;
+                    Item.MPBonus  += Inventory[idx].MP;
+                    HP += Inventory[idx].HP;
+                    MP += Inventory[idx].MP;
 
                     Inventory[idx].IsEquipped = true;
                 }

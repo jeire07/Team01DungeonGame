@@ -1,5 +1,5 @@
-﻿using static System.Console;
-
+﻿using System.Security.Cryptography;
+using static System.Console;
 
 namespace Team01DungeonGame
 {
@@ -14,19 +14,14 @@ namespace Team01DungeonGame
         enum AtkEffect { normal, skill, critical, avoid }
 
         public int Stage { get; set; }
-        private List<Monster> _monsters { get; set; }
         private Character _player { get; set; }
-        private int _playerDamage { get; set; }
-        private int _monsterIdx { get; set; }
-        private int Length { get; }
-
+        private List<Monster> _monsters { get; set; }
+        private List<int> _playerDamages { get; set; }
+        private List<int> _hitMonsters { get; set; }
+        private List<int> _hitMonstersHP { get; set; }
 
         private AtkEffect atkType = AtkEffect.normal;
         private int _enterHP;
-
-
-
-
 
         public Battle(int stage, Character player)
         {
@@ -35,8 +30,9 @@ namespace Team01DungeonGame
             _monsters = new List<Monster>();  // 몬스터 생셩 대열
 
             MakeStage();  // 무작위로 몬스터 생성
-            _playerDamage = 0;
-            _monsterIdx = 0;
+            _playerDamages = new List<int>();
+            _hitMonsters = new List<int>();
+            _hitMonstersHP = new List<int>();
         }
 
         private void MakeStage()
@@ -204,20 +200,24 @@ namespace Team01DungeonGame
                     scene = Scene.playerPick;
                     break;
                 default:
-                    _playerDamage = PlayerDamage(_player.Atk + Item.AtkBonus, out atkType);
-                    _playerDamage = _monsters[input - 1].TakeDamage(_playerDamage);
+                    _hitMonsters.Add(input - 1);  // 공격당한 몬스터가 누구인지 기록
+                    _hitMonstersHP.Add(_monsters[input - 1].HP);  // 공격당한 몬스터의 원래 HP 기록
 
-                    _monsterIdx = input - 1;
+                    int damage = PlayerDamage(_player.Atk + Item.AtkBonus, out atkType);  // 플레이어의 데미지 계산, 공격 타입 출력
+                    damage = _monsters[input - 1].TakeDamage(damage);
+                    _playerDamages.Add(damage);  // 몬스터 HP 차감
 
                     scene = Scene.playerEnd;
                     break;
             }
             return scene;
         }
-        private bool[] isMonsterAlive;
+
         private Scene PlayerSkillScene()
         {
             Scene scene = Scene.playerPick;
+            int damage;
+            int monsterIdx;
             Clear();
 
             WriteLine();
@@ -225,11 +225,9 @@ namespace Team01DungeonGame
             WriteLine();
 
             int monsterCount = _monsters.Count;
-            isMonsterAlive = new bool[monsterCount];
             for (int i = 0; i < monsterCount; i++)
             {
                 _monsters[i].MonsterInfo(true, i + 1);
-                isMonsterAlive[i] = true;
             }
 
             WriteLine();
@@ -256,21 +254,27 @@ namespace Team01DungeonGame
                 case 0:
                     scene = Scene.playerPick;
                     break;
+
+                // 알파 스트라이크 - MP 10, 공격력 * 2, 지정한 타겟 1회
                 case 1:
                     WriteLine();
                     WriteLine(" 공격할 대상을 선택해주세요.");
-                    int MonsterNum = CheckMonsterInput(monsterCount);
-                    switch (MonsterNum)
+                    int input = CheckMonsterInput(monsterCount);
+                    switch (input)
                     {
                         case 0:
                             break;
                         default:
                             if (_player.MP >= 10)
                             {
-                                _playerDamage = PlayerDamage(_player.Atk + Item.AtkBonus, out atkType) * 2;
-                                _monsters[MonsterNum - 1].TakeDamage(_playerDamage);
-                                _monsterIdx = MonsterNum - 1;
+                                _hitMonsters.Add(input - 1);  // 공격당한 몬스터가 누구인지 기록
+                                _hitMonstersHP.Add(_monsters[input - 1].HP);  // 공격당한 몬스터의 원래 HP 기록
 
+                                damage = (int)(_player.Atk + Item.AtkBonus) * 2;
+                                damage = _monsters[input - 1].TakeDamage(damage);
+                                _playerDamages.Add(damage);
+
+                                atkType = AtkEffect.skill;  // 플레이어 턴 종료 후 나오는 화면에서 스킬 공격으로 표기됨
                                 _player.MP -= 10;
                                 scene = Scene.playerEnd;
                             }
@@ -284,69 +288,87 @@ namespace Team01DungeonGame
                             break;
                     }
                     break;
-                case 2:
-                    if (_player.MP >= 15)
-                    {
-                        for (int i = 0; i < 2; i++)
-                        {
-                            int randomMonsterIndex = RandomMonsterIndex(isMonsterAlive);
 
-                            if (randomMonsterIndex == -1)
+                // 더블 스트라이크 - MP 15, 공격력 * 1.5, 2명의 무작위 적
+                case 2:
+                    if (_player.MP >= 10)
+                    {
+                        for (int i = 0; i < 2; i++)  // 2회 공격이므로 2회 반복
+                        {
+                            // 생존한 몬스터가 남아있는지 확인, 1회차 공격에 남아있던 몬스터가 죽었을 수도 있으므로 확인.
+                            foreach (Monster checkAlive in _monsters)
                             {
-                                WriteLine("더 이상 공격할 몬스터가 없습니다.");
-                                scene = Scene.playerSkill;
-                                break;
+                                if (checkAlive.IsAlive == true)  // 살아남은 몬스터가 있음
+                                {
+                                    break;
+                                }
+                                else  // 모든 몬스터가 전멸함
+                                {
+                                    scene = Scene.playerEnd;
+                                    return scene;
+                                }
                             }
 
-                            _playerDamage = (int)(_player.Atk * 1.5f + Item.AtkBonus);
-                            _monsters[randomMonsterIndex].TakeDamage(_playerDamage);
-                            _monsterIdx = randomMonsterIndex;
+                            // 살아남은 몬스터가 있기에 공격 진행 ( 대상 몬스터 무작위 선택 )
+                            monsterIdx = RandomMonsterIndex();
 
-                            isMonsterAlive[randomMonsterIndex] = !_monsters[randomMonsterIndex].IsAlive;
+                            _hitMonsters.Add(monsterIdx);  // 공격당한 몬스터가 누구인지 기록
+                            _hitMonstersHP.Add(_monsters[monsterIdx].HP);  // 공격당한 몬스터의 원래 HP 기록
 
+                            damage = (int)((_player.Atk + Item.AtkBonus) * 1.5);
+                            damage = _monsters[monsterIdx].TakeDamage(damage);
+                            _playerDamages.Add(damage);
                         }
-
+                        atkType = AtkEffect.skill;  // 플레이어 턴 종료 후 나오는 화면에서 스킬 공격으로 표기됨
                         _player.MP -= 15;
+
                         scene = Scene.playerEnd;
                     }
                     else
                     {
-                        WriteLine("MP가 부족합니다.");
-                        WriteLine("0. 돌아가기");
+                        WriteLine(" MP가 부족합니다.");
+                        WriteLine(" 0. 돌아가기");
                         CheckValidInput(0, 0);
                         scene = Scene.playerSkill;
                     }
                     break;
+
+                // 마력 광탄 - MP 20, 공격력 * 1.75, 적 3번 공격, 일일이 지정
                 case 3:
                     if (_player.MP >= 20)
                     {
                         for (int i = 0; i < 3; i++)
                         {
-                            WriteLine();
-                            WriteLine(" 공격할 대상을 선택해주세요.");
+                            // 생존한 몬스터가 있는지 검사
                             foreach (Monster checkAlive in _monsters)
                             {
                                 if (checkAlive.IsAlive == true)
                                 {
-                                    scene = Scene.monster;
                                     break;
                                 }
                                 else
                                 {
-                                    scene = Scene.victory;
+                                    scene = Scene.playerEnd;
+                                    return scene;
                                 }
                             }
-                            MonsterNum = CheckMonsterInput(monsterCount);
-                            if (MonsterNum == 0)
-                            {
-                                scene = Scene.playerSkill;
-                                return scene;
-                            }
-                            _playerDamage = (int)(PlayerDamage(_player.Atk + Item.AtkBonus, out atkType) * 0.75);
-                            _monsters[MonsterNum - 1].TakeDamage(_playerDamage);
-                            _monsterIdx = MonsterNum - 1;
+
+                            WriteLine();
+                            WriteLine(" 공격할 대상을 선택해주세요.");
+
+                            input = CheckMonsterInput(monsterCount);
+
+                            _hitMonsters.Add(input - 1);  // 공격당한 몬스터가 누구인지 기록
+                            _hitMonstersHP.Add(_monsters[input - 1].HP);  // 공격당한 몬스터의 원래 HP 기록
+
+                            damage = (int)((_player.Atk + Item.AtkBonus) * 1.75f);
+                            damage = _monsters[input - 1].TakeDamage(damage);
+                            _playerDamages.Add(damage);
                         }
+
+                        atkType = AtkEffect.skill;  // 플레이어 턴 종료 후 나오는 화면에서 스킬 공격으로 표기됨
                         _player.MP -= 20;
+
                         scene = Scene.playerEnd;
                     }
                     else
@@ -357,28 +379,26 @@ namespace Team01DungeonGame
                         scene = Scene.playerSkill;
                     }
                     break;
+
+                // 인페르노 - MP 40, 공격력 * 1.5 로 모든 적을 2번
                 case 4:
                     if (_player.MP >= 40)
                     {
                         for (int i = 0; i < monsterCount; i++)
                         {
-                            if (_monsters[i].IsAlive)
+                            if (_monsters[i].IsAlive)  // 생존한 적에게만 데미지가 들어가야 함.
                             {
-                                _playerDamage = (int)(_player.Atk * 1.5f + Item.AtkBonus);
-                                _monsters[i].TakeDamage(_playerDamage);
-                                _monsterIdx = i;
+                                _hitMonsters.Add(i);
+                                _hitMonstersHP.Add(_monsters[i].HP);
+
+                                damage = (int)((_player.Atk + Item.AtkBonus) * 1.5f);
+                                damage = _monsters[i].TakeDamage(damage);
+                                _playerDamages.Add(damage);
                             }
                         }
-                        for (int i = 0; i < monsterCount; i++)
-                        {
-                            if (_monsters[i].IsAlive)
-                            {
-                                _playerDamage = (int)(_player.Atk * 1.5f + Item.AtkBonus);
-                                _monsters[i].TakeDamage(_playerDamage);
-                                _monsterIdx = i;
-                            }
-                        }
+                        atkType = AtkEffect.skill;  // 플레이어 턴 종료 후 나오는 화면에서 스킬 공격으로 표기됨
                         _player.MP -= 40;
+
                         scene = Scene.playerEnd;
                     }
                     else
@@ -397,24 +417,23 @@ namespace Team01DungeonGame
             return scene;
         }
 
-        private int RandomMonsterIndex(bool[] isMonsterAlive)
+        private int RandomMonsterIndex()  //임의로 작성한 스킬랜덤지정 메소드
         {
             Random random = new Random();
+            List<int> indexes = new List<int>();
 
-            if (!isMonsterAlive.Any(alive => alive))
+            for(int i = 0; i < _monsters.Count; i++)
             {
-                return -1;
+                if(_monsters[i].IsAlive)
+                {
+                    indexes.Add(i);
+                }
             }
-            int randomIndex;
-            do
-            {
-                randomIndex = random.Next(isMonsterAlive.Length);
-            } while (!isMonsterAlive[randomIndex]);
-
-            return randomIndex;
+            
+            int randIndex = random.Next(0, indexes.Count);
+            randIndex = indexes[randIndex];
+            return randIndex;
         }
-
-
 
         private Scene HealingScene()
         {
@@ -506,8 +525,7 @@ namespace Team01DungeonGame
             PrintColoredText(" Battle!!");
             WriteLine();
 
-            int monsterCount = _monsters.Count;
-            for (int i = 0; i < monsterCount; i++)
+            for (int i = 0; i < _monsters.Count; i++)
             {
                 _monsters[i].MonsterInfo(false, i + 1);
             }
@@ -519,48 +537,55 @@ namespace Team01DungeonGame
             WriteLine();
             WriteLine($" {_player.Name} 의 공격!");
 
-            Monster monster = _monsters[_monsterIdx];
-            Write($" Lv.{monster.Level} {monster.Name} 를(을) 공격했습니다.");
-            Write($"[데미지 : {_playerDamage}] - ");
-            
-            switch(atkType)
+            for (int i = 0; i < _hitMonsters.Count; i++)
             {
-                case AtkEffect.normal:
-                    WriteLine("기본 공격");
-                    break;
-                case AtkEffect.skill:
-                    WriteLine("스킬 공격");
-                    break;
-                case AtkEffect.critical:
-                    WriteLine("치명타 공격!");
-                    break;
-                case AtkEffect.avoid:
-                    WriteLine("회피했습니다!");
-                    break;
+                Monster monster = _monsters[_hitMonsters[i]];
+                Write($" Lv.{monster.Level} {monster.Name} 를(을) 공격했습니다.");
+                Write($"[데미지 : {_playerDamages[i]}] - ");
+
+                switch (atkType)
+                {
+                    case AtkEffect.normal:
+                        WriteLine("기본 공격");
+                        break;
+                    case AtkEffect.skill:
+                        WriteLine("스킬 공격");
+                        break;
+                    case AtkEffect.critical:
+                        WriteLine("치명타 공격!");
+                        break;
+                    case AtkEffect.avoid:
+                        WriteLine("회피했습니다!");
+                        break;
+                }
+
+                WriteLine();
+                WriteLine($" Lv.{monster.Level} {monster.Name}");
+                WriteLine($" {monster.Def} 방어");
+                WriteLine($" HP {_hitMonstersHP[i]} -> {_hitMonstersHP[i] - _playerDamages[i]}");
+                WriteLine();
             }
 
-            WriteLine();
-            WriteLine($" Lv.{monster.Level} {monster.Name}");
-            WriteLine($" {monster.Def} 방어");
-            WriteLine($" HP {monster.HP + _playerDamage} -> {monster.HP}");
-            WriteLine();
             WriteLine("==============================================================");
             WriteLine();
 
-            _playerDamage = 0;
+            _playerDamages = new List<int>();
+            _hitMonsters = new List<int>();
+            _hitMonstersHP = new List<int>();
 
             foreach (Monster checkAlive in _monsters)
             {
-                if (checkAlive.IsAlive == true)
+                if (checkAlive.IsAlive == true)  // 살아남은 몬스터가 있다면 몬스터 턴 진행
                 {
                     scene = Scene.monster;
                     break;
                 }
-                else
+                else  // 모든 몬스터 사망 시 승리 화면으로 넘어감
                 {
                     scene = Scene.victory;
                 }
             }
+
             WriteLine(" 0. 다음");
 
             CheckValidInput(0, 0);
@@ -592,7 +617,7 @@ namespace Team01DungeonGame
                     PrintColoredText(" Battle!!");
                     WriteLine();
                     WriteLine($" Lv.{monster.Level} {monster.Name} 의 공격!");
-                    WriteLine($" {_player.Name} 을(를) 맞췄습니다.  [데미지 : {_player.Def+damage}]");
+                    WriteLine($" {_player.Name} 을(를) 맞췄습니다. [데미지 : {_player.Def + damage}]");
                     WriteLine();
                     WriteLine($" Lv.{_player.Level} {_player.Name}");
                     WriteLine($" {_player.Def} 방어, 입은 피해 : {damage}");
