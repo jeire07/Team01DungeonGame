@@ -588,13 +588,14 @@ namespace Team01DungeonGame
                     {
                         return ret;
                     }
+                    else if (ret > _monsters.Count || ret < 0)
+                    {
+                        WriteLine();
+                        WriteLine(" 잘못된 입력입니다. 다시 입력해주세요");
+                    }
                     else if (_monsters[ret - 1].IsAlive)
                     {
                         return ret;
-                    }
-                    else
-                    {
-                        WriteLine(" 잘못된 입력입니다. 다시 입력해주세요");
                     }
                 }
             }
