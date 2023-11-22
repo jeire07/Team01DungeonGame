@@ -6,7 +6,7 @@ namespace Team01DungeonGame
     {
         enum Scene
         {
-            main, status, inventory, market, rest, healing, dungeon, stagePick,
+            main, status, inventory, market, rest, healing, dungeon, upgrade, gatcha, stagePick,
             equipment, buy, sell, kill
         }
 
@@ -157,6 +157,12 @@ namespace Team01DungeonGame
                 case Scene.sell:
                     scene = SellScene();
                     break;
+                case Scene.upgrade:
+                    scene = Upgrade();
+                    break;
+                case Scene.gatcha:
+                    scene = Gatcha();
+                    break;
                 case Scene.kill:
                     break;
             }
@@ -175,8 +181,9 @@ namespace Team01DungeonGame
             WriteLine(" 2. 인벤토리");
             WriteLine(" 3. 상점");
             WriteLine(" 4. 휴식");
-            WriteLine(" 5. 던전 입장");
-            WriteLine(" 6. 포션 사용");
+            WriteLine(" 5. 업그레이드");
+            WriteLine(" 6. 던전 입장");
+            WriteLine(" 7. 포션 사용");
             WriteLine(" 9. 게임 종료");
             WriteLine();
             WriteLine(" 원하시는 행동을 입력해주세요.");
@@ -196,9 +203,12 @@ namespace Team01DungeonGame
                     scene = Scene.rest;
                     break;
                 case 5:
-                    scene = Scene.dungeon;
+                    scene = Scene.upgrade;
                     break;
                 case 6:
+                    scene = Scene.dungeon;
+                    break;
+                case 7:
                     scene = Scene.healing;
                     break;
                 case 9:
@@ -569,6 +579,318 @@ namespace Team01DungeonGame
                     scene = Scene.healing;
                     break;
             }
+            return scene;
+        }
+
+        private Scene Upgrade()
+        {
+            Scene scene = Scene.main;
+            Clear();
+
+            WriteLine();
+            PrintColoredText(" 업그레이드!");
+            WriteLine();
+            PrintwithColoredText(" ", "100", " G 를 내면 스텟을 강화할 수 있습니다.");
+            PrintwithColoredText(" (보유 골드 : ", $"{_player.Gold}", " G)");
+            WriteLine();
+
+            WriteLine($" 1. 체력: {_player.HP} / {_player.MaxHP + Item.HPBonus}");
+            WriteLine($" 2. 마나: {_player.MP} / {_player.MaxMP + Item.MPBonus}");
+            WriteLine($" 3. 공격: {_player.Atk + Item.AtkBonus}");
+            WriteLine($" 4. 방어: {_player.Def + Item.DefBonus}");
+            WriteLine("");
+            PrintColoredText(" 5. 인생역전의 기회");
+            WriteLine();
+            WriteLine(" 강화하고 싶은 스탯을 선택해주세요.");
+            WriteLine();
+            WriteLine(" 0. 나가기");
+            WriteLine();
+
+            int userInput = CheckValidInput(0, 5);
+            
+                switch (userInput)
+                {
+                    case 0:
+                        scene = Scene.main;
+                        break;
+                    case 1:
+                        if (_player.Gold >= 100)
+                        {
+                            _player.HP += 10;
+                            _player.MaxHP += 10;
+                            _player.Gold -= 100;
+
+                            Clear();
+                            WriteLine("");
+                            WriteLine(" 체력이 10 강화됐다!");
+                            WriteLine("");
+                            WriteLine(" 0. 다음");
+                            CheckValidInput(0, 0);
+
+                            scene = Scene.upgrade;
+                            break;
+                        }
+                        else
+                        {
+                            Clear();
+                            WriteLine("");
+                            WriteLine(" Gold가 부족합니다.");
+                            WriteLine("");
+                            WriteLine(" 0. 다음");
+
+                            CheckValidInput(0, 0);
+
+                            scene = Scene.upgrade;
+                            break;
+                        }
+                case 2:
+                    if (_player.Gold >= 100)
+                    {
+                        _player.MP += 1;
+                        _player.MaxMP += 1;
+                        _player.Gold -= 100;
+
+                        Clear();
+                        WriteLine("");
+                        WriteLine(" 마나가 1 강화됐다!");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.upgrade;
+                        break;
+                    }
+                    else
+                    {
+                        Clear();
+                        WriteLine("");
+                        WriteLine(" Gold가 부족합니다.");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.upgrade;
+                        break;
+                    }
+                case 3:
+                    if (_player.Gold >= 100)
+                    {
+                        _player.Atk += 1;
+                        _player.Gold -= 100;
+
+                        Clear();
+                        WriteLine("");
+                        WriteLine(" 공격이 1 강화됐다!");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.upgrade;
+                        break;
+                    }
+                    else
+                    {
+                        Clear();
+                        WriteLine("");
+                        WriteLine(" Gold가 부족합니다.");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.upgrade;
+                        break;
+                    }
+                case 4:
+                    if (_player.Gold >= 100)
+                    {
+                        _player.Def += 1;
+                        _player.Gold -= 100;
+
+                        Clear();
+                        WriteLine("");
+                        WriteLine(" 방어가 1 강화됐다!");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.upgrade;
+                        break;
+                    }
+                    else
+                    {
+                        Clear();
+                        WriteLine("");
+                        WriteLine(" Gold가 부족합니다.");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.upgrade;
+                        break;
+                    }
+                case 5:
+                        scene = Scene.gatcha;
+                        break;
+            }
+           
+
+            return scene;
+        }
+
+        private Scene Gatcha()
+        {
+            Scene scene = Scene.main;
+            Clear();
+
+            WriteLine();
+            PrintColoredText(" 인생역전 한방!");
+            WriteLine();
+            PrintwithColoredText(" ", "500", " G 를 내면 랜덤한 수치로 스텟을 강화할 수 있습니다.");
+            PrintwithColoredText(" (보유 골드 : ", $"{_player.Gold}", " G)");
+            WriteLine();
+
+            WriteLine($" 1. 체력: {_player.HP} / {_player.MaxHP + Item.HPBonus}");
+            WriteLine($" 2. 마나: {_player.MP} / {_player.MaxMP + Item.MPBonus}");
+            WriteLine($" 3. 공격: {_player.Atk + Item.AtkBonus}");
+            WriteLine($" 4. 방어: {_player.Def + Item.DefBonus}");
+            WriteLine();
+            WriteLine(" 인생역전 하고싶은 스탯을 선택해주세요.");
+            WriteLine();
+            WriteLine(" 0. 나가기");
+            WriteLine();
+
+            Random random = new Random();
+            int randNum = random.Next(1, 10);
+
+            int userInput = CheckValidInput(0, 4);
+            switch (userInput)
+            {
+                case 0:
+                    scene = Scene.main;
+                    break;
+                case 1:
+                    if(_player.Gold >= 500)
+                    {
+                        _player.HP += randNum;
+                        _player.MaxHP += randNum;
+                        _player.Gold -= 500;
+    
+                        Clear();
+                        WriteLine("");
+                        WriteLine($" 체력이 {randNum} 강화됐다!");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.gatcha;
+                        break;
+                    }
+                    else
+                    {
+                        Clear();
+                        WriteLine("");
+                        WriteLine(" Gold가 부족합니다.");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.upgrade;
+                        break;
+                    }
+                case 2:
+                    if (_player.Gold >= 500)
+                    {
+                        _player.MP += randNum;
+                        _player.MaxMP += randNum;
+                        _player.Gold -= 500;
+
+                        Clear();
+                        WriteLine("");
+                        WriteLine($" 마나가 {randNum} 강화됐다!");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.gatcha;
+                        break;
+                    }
+                    else
+                    {
+                        Clear();
+                        WriteLine("");
+                        WriteLine(" Gold가 부족합니다.");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.upgrade;
+                        break;
+                    }
+                case 3:
+                    if (_player.Gold >= 500)
+                    {
+                        _player.Atk += randNum;
+                        _player.Gold -= 500;
+
+                        Clear();
+                        WriteLine("");
+                        WriteLine($" 공격이 {randNum} 강화됐다!");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.gatcha;
+                        break;
+                    }
+                    else
+                    {
+                        Clear();
+                        WriteLine("");
+                        WriteLine(" Gold가 부족합니다.");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.upgrade;
+                        break;
+                    }
+                case 4:
+                    if (_player.Gold >= 500)
+                    {
+                        _player.Def += randNum;
+                        _player.Gold -= 500;
+
+                        Clear();
+                        WriteLine("");
+                        WriteLine($" 방어가 {randNum} 강화됐다!");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.gatcha;
+                        break;
+                    }
+                    else
+                    {
+                        Clear();
+                        WriteLine("");
+                        WriteLine(" Gold가 부족합니다.");
+                        WriteLine("");
+                        WriteLine(" 0. 다음");
+
+                        CheckValidInput(0, 0);
+
+                        scene = Scene.upgrade;
+                        break;
+                    }
+            }
+
             return scene;
         }
 
