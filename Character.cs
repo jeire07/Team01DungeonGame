@@ -54,7 +54,7 @@ namespace Team01DungeonGame
                     break;
                 case JobType.warrior:
                     Atk = 15;
-                    Def = 7;
+                    Def = 2;
                     HP = 150;
                     MaxHP = 150;
                     MP = 40;
@@ -62,12 +62,12 @@ namespace Team01DungeonGame
                     Gold = 1000;
                     break;
                 case JobType.mage:
-                    Atk = 5;
-                    Def = 2;
-                    HP = 80;
-                    MaxHP = 80;
-                    MP = 500;
-                    MaxMP = 500;
+                    Atk = 10;
+                    Def = 0;
+                    HP = 100;
+                    MaxHP = 100;
+                    MP = 300;
+                    MaxMP = 300;
                     Gold = 50;
                     break;
                 case JobType.developer:

@@ -2,7 +2,7 @@
 
 namespace Team01DungeonGame
 {
-    public enum MonsterType { minion, insect, canon }
+    public enum MonsterType { minion, insect, canon, zombie }
 
     public class Monster
     {
@@ -27,27 +27,35 @@ namespace Team01DungeonGame
             {
                 case MonsterType.minion:
                     Name = "벌크업한 미니언";
-                    Atk = 5 + level;
-                    Def = 0;
-                    HP = 15 + level;
-                    MaxHP = 15 + level;
-                    Gold = 20 + level;
+                    Atk = 3 + level;
+                    Def = 3 + level;
+                    HP = 40 + level;
+                    MaxHP = 40 + level;
+                    Gold = 10 + level;
                     break;
                 case MonsterType.insect:
                     Name = "당랑권 사마귀";
                     Atk = 9 + level;
-                    Def = 0;
-                    HP = 10 + level;
-                    MaxHP = 10 + level;
-                    Gold = 15 + level;
+                    Def = 1 + level;
+                    HP = 20 + level;
+                    MaxHP = 20 + level;
+                    Gold = 20 + level;
                     break;
                 case MonsterType.canon:
                     Name = "뚱뚱한 해적";
-                    Atk = 8 + level;
-                    Def = 0;
-                    HP = 25 + level;
-                    MaxHP = 25 + level;
-                    Gold = 33 + level;
+                    Atk = 7 + level;
+                    Def = 3 + level;
+                    HP = 70 + level;
+                    MaxHP = 70 + level;
+                    Gold = 70 + level;
+                    break;
+                case MonsterType.zombie:
+                    Name = "좀비";
+                    Atk = 5 + level;
+                    Def = 5 + level;
+                    HP = 30 + level;
+                    MaxHP = 30 + level;
+                    Gold = 30 + level;
                     break;
             }
 

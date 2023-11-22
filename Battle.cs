@@ -39,7 +39,7 @@ namespace Team01DungeonGame
         {
             Random random = new Random();
             int randNum = random.Next(1, 5);
-            int randType = random.Next(0, 3);
+            int randType = random.Next(0, 4);
 
             if (Stage >= 1)
             {
@@ -50,7 +50,7 @@ namespace Team01DungeonGame
             {
                 if (randNum > 3)
                 {
-                    randType = random.Next(0, 3);
+                    randType = random.Next(0, 4);
                     _monsters.Add(new Monster(Stage, (MonsterType)randType));
                 }
             }
@@ -59,7 +59,7 @@ namespace Team01DungeonGame
             {
                 if (randNum > 2)
                 {
-                    randType = random.Next(0, 3);
+                    randType = random.Next(0, 4);
                     _monsters.Add(new Monster(Stage, (MonsterType)randType));
                 }
             }
@@ -68,7 +68,7 @@ namespace Team01DungeonGame
             {
                 if (randNum > 1)
                 {
-                    randType = random.Next(0, 3);
+                    randType = random.Next(0, 4);
                     _monsters.Add(new Monster(Stage, (MonsterType)randType));
                 }
             }
