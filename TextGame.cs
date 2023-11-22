@@ -98,12 +98,12 @@ namespace Team01DungeonGame
             _items.Add(new Item("하얀 옷", "크기가 자유자제로 변합니다.", EquipType.body, 0, 1, 0, 0, 150));
             _items.Add(new Item("목장갑", "인부의 힘", EquipType.globes, 0, 0, 3, 0, 0));
             _items.Add(new Item("돌반지", "구멍을 어떻게 뚫었지?", EquipType.ring1, 0, 0, 5, 0, 50));
-            _items.Add(new Item("빨간 버튼", "눌려볼까?", EquipType.body, -5, -5, -20, 0, 0));
+            _items.Add(new Item("빨간 버튼", "눌러볼까?", EquipType.body, -5, -5, -20, 0, 0));
 
             _items.Add(new Item("짱돌", "잘 다듬어져서 던지기 좋습니다", EquipType.oneHand, 2, 0, 0, 0, 10));
             _items.Add(new Item("삿갓", "햇빛이 잘 막아집니다.", EquipType.head, 0, 2, 0, 0, 150));
             _items.Add(new Item("수정 구슬", "신비한 마력이 느껴집니다.", EquipType.oneHand, 0, 1, 0, 10, 200));
-            _items.Add(new Item("벌목 도끼", "벌목할 때 쓸 수있는 도끼", EquipType.twoHand, 5, 0, 0, 0, 500));
+            _items.Add(new Item("벌목 도끼", "벌목할 때 쓸 수 있는 도끼", EquipType.twoHand, 5, 0, 0, 0, 500));
             _items.Add(new Item("깨진 결혼 반지", "대부분 금값입니다.", EquipType.ring1, 0, 0, -10, 0, 1000));
 
             _items.Add(new Item("체력 포션", "HP를 30 회복합니다.", EquipType.potion, 0, 0, 0, 0, 200, false));
@@ -117,9 +117,8 @@ namespace Team01DungeonGame
 
             _items.Add(new Item("철광석", "불순물이 섞인 철광석입니다", EquipType.material, 0, 0, 0, 0, 100, false));
             _items.Add(new Item("소다회", "각종 식물을 태운 뒤 정제한 소다회입니다", EquipType.material, 0, 0, 0, 0, 100, false));
-            _items.Add(new Item("소금", "각종 식물을 태운 뒤 정제한 소다회입니다", EquipType.material, 0, 0, 0, 0, 100, false));
+            _items.Add(new Item("소금", "많이 짭니다.", EquipType.material, 0, 0, 0, 0, 100, false));
             _items.Add(new Item("올리브", "당신이 아는 그 올리브 열매입니다.", EquipType.material, 0, 0, 0, 0, 100, false));
-            
 
             // 상인 정보 세팅
             _merchant = new Character("jeire", JobType.human);
