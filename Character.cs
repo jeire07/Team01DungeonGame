@@ -168,12 +168,37 @@ namespace Team01DungeonGame
         /// </summary>
         public void LevelUp()
         {
-            if(Exp > MaxExp)
+            WriteLine("");
+            WriteLine("===========================");
+            WriteLine("");
+            WriteLine(" 레벨업!!!");
+            WriteLine("");
+            WriteLine($" Lv. {Level} -> {Level+1}");
+            WriteLine("");
+            WriteLine($" 공격: {Atk} -> {Atk + 0.5f}");
+            WriteLine($" 방어: {Def} -> {Def + 1}");
+            
+
+            Exp -= MaxExp;
+            Level++;
+            MaxExp = (int)Math.Ceiling(MaxExp * 1.5f);
+
+            WriteLine($" 경험치: {Exp} / {MaxExp}");
+            WriteLine("");
+            WriteLine("===========================");
+            WriteLine("");
+
+            Atk += 0.5f;
+            Def += 1;
+        }
+
+        public void GetExp(int exp)
+        {
+            Exp += exp;
+
+            while (Exp >= MaxExp)
             {
-                Level++;
-                MaxExp = (int)Math.Ceiling(MaxExp * 1.5f);
-                Atk += 0.5f;
-                Def += 1;
+                LevelUp();
             }
         }
 
