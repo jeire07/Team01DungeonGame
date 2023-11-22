@@ -656,6 +656,18 @@ namespace Team01DungeonGame
             WriteLine();
             WriteLine(" Lv. {0} {1}", _player.Level, _player.Name);
             WriteLine(" HP {0} -> {1}", _enterHP, _player.HP);
+
+            int presentMP = _player.MP;
+            if (_player.MP <= (_player.MaxMP - 10))
+            {
+                _player.MP += 10;
+            }
+            else
+            {
+                _player.MP = _player.MaxMP;
+            }
+            WriteLine(" MP {0} -> {1}", presentMP, _player.MP);
+
             WriteLine();
 
             WriteLine($" 경험치: + {_monsters.Count * Stage} ({_player.Exp + _monsters.Count * Stage} / {_player.MaxExp})");
