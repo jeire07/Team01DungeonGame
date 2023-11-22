@@ -80,7 +80,7 @@ namespace Team01DungeonGame
             {
                 if (withNumber)
                 {
-                    ForegroundColor = ConsoleColor.Cyan;
+                    ForegroundColor = ConsoleColor.Magenta;
                     Write($" {idx}");
                     ResetColor();
 
