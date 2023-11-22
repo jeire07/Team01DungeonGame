@@ -657,6 +657,14 @@ namespace Team01DungeonGame
             WriteLine(" Lv. {0} {1}", _player.Level, _player.Name);
             WriteLine(" HP {0} -> {1}", _enterHP, _player.HP);
 
+            
+
+            WriteLine();
+
+            WriteLine($" 경험치: + {_monsters.Count * Stage} ({_player.Exp + _monsters.Count * Stage} / {_player.MaxExp})");
+            _player.Gold += _monsters.Count * Stage * 5;
+            WriteLine($" 골드: + {_monsters.Count * Stage * 5} (보유중: {_player.Gold})");
+            _player.GetExp(_monsters.Count * Stage);
             int presentMP = _player.MP;
             if (_player.MP <= (_player.MaxMP - 10))
             {
@@ -666,14 +674,7 @@ namespace Team01DungeonGame
             {
                 _player.MP = _player.MaxMP;
             }
-            WriteLine(" MP {0} -> {1}", presentMP, _player.MP);
-
-            WriteLine();
-
-            WriteLine($" 경험치: + {_monsters.Count * Stage} ({_player.Exp + _monsters.Count * Stage} / {_player.MaxExp})");
-            _player.Gold += _monsters.Count * Stage * 5;
-            WriteLine($" 골드: + {_monsters.Count * Stage * 5} (보유중: {_player.Gold})");
-            _player.GetExp(_monsters.Count * Stage);
+            WriteLine(" 마나 회복: MP {0} -> {1}", presentMP, _player.MP);
 
             WriteLine();
             WriteLine(" 0. 다음");
