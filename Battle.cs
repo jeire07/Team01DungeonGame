@@ -655,7 +655,7 @@ namespace Team01DungeonGame
             WriteLine(" 던전에서 몬스터 {0}마리를 잡았습니다.", _monsters.Count);
             WriteLine();
             WriteLine(" Lv. {0} {1}", _player.Level, _player.Name);
-            WriteLine(" HP {0} -> {1}", _enterHP, _player.HP);
+            WriteLine(" HP {0} -> {1} / {2}", _enterHP, _player.HP, _player.MaxHP);
 
             
 
@@ -674,7 +674,7 @@ namespace Team01DungeonGame
             {
                 _player.MP = _player.MaxMP;
             }
-            WriteLine(" 마나 회복: MP {0} -> {1}", presentMP, _player.MP);
+            WriteLine(" 마나 회복: MP {0} -> {1} / {2}", presentMP, _player.MP, _player.MaxMP);
 
             WriteLine();
             WriteLine(" 0. 다음");
