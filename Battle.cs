@@ -491,7 +491,6 @@ namespace Team01DungeonGame
                     WriteLine();
                     WriteLine(" 0. 다음");
                     WriteLine();
-                    Write(" >> ");
 
                     CheckValidInput(0, 0);
                 }
@@ -578,7 +577,8 @@ namespace Team01DungeonGame
         {
             while (true)
             {
-                Write(" ");
+                WriteLine();
+                Write(" >> ");
                 string input = ReadLine();
 
                 bool parseSuccess = int.TryParse(input, out var ret);
@@ -657,6 +657,7 @@ namespace Team01DungeonGame
             while (true)
             {
                 WriteLine();
+                Write(" >> ");
                 Write(" ");
                 string input = ReadLine();
 

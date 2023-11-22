@@ -1,4 +1,5 @@
-﻿using static System.Console;
+﻿using System.Drawing;
+using static System.Console;
 
 namespace Team01DungeonGame
 {
@@ -264,7 +265,9 @@ namespace Team01DungeonGame
             WriteLine();
             WriteLine("===========================");
             WriteLine();
+            ForegroundColor = ConsoleColor.Yellow;
             WriteLine(" 레벨업!!!");
+            ResetColor();
             WriteLine();
             WriteLine($" Lv. {Level} -> {Level+1}");
             WriteLine();

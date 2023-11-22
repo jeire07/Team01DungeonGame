@@ -48,6 +48,8 @@ namespace Team01DungeonGame
             {
                 WriteLine(" 당신의 이름은 무엇입니까?");
                 Write(" ");
+                WriteLine();
+                Write(" >> ");
                 userName = ReadLine() ?? "jeire";
                 if (userName.Length < 9)
                 {
@@ -938,7 +940,7 @@ namespace Team01DungeonGame
             while (true)
             {
                 WriteLine();
-                Write(" ");
+                Write(" >> ");
                 string input = ReadLine();
 
                 bool parseSuccess = int.TryParse(input, out var ret);
