@@ -16,7 +16,7 @@ namespace Team01DungeonGame
         public int Gold { get; set; }
         public bool IsAlive { get; set; }
         public bool IsTurn { get; set; }
-
+        public bool IsDead { get; internal set; }
 
         public Monster(int level, MonsterType job)
         {

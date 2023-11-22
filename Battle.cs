@@ -1,5 +1,6 @@
 ﻿using static System.Console;
 
+
 namespace Team01DungeonGame
 {
     public class Battle
@@ -17,9 +18,11 @@ namespace Team01DungeonGame
         private Character _player { get; set; }
         private int _playerDamage { get; set; }
         private int _monsterIdx { get; set; }
+        private int Length { get; }
 
         private AtkEffect atkType = AtkEffect.normal;
         private int _enterHP;
+        
 
         public Battle(int stage, Character player)
         {
@@ -207,7 +210,7 @@ namespace Team01DungeonGame
             }
             return scene;
         }
-
+        private bool[] isMonsterAlive;
         private Scene PlayerSkillScene()
         {
             Scene scene = Scene.playerPick;
@@ -218,9 +221,11 @@ namespace Team01DungeonGame
             WriteLine();
 
             int monsterCount = _monsters.Count;
+            isMonsterAlive = new bool[monsterCount];
             for (int i = 0; i < monsterCount; i++)
             {
                 _monsters[i].MonsterInfo(true, i + 1);
+                isMonsterAlive[i] = true;
             }
 
             WriteLine();
@@ -276,25 +281,33 @@ namespace Team01DungeonGame
                     }
                     break;
                 case 2:
-                    if (_player.MP >= 10)
+                    if (_player.MP >= 15)
                     {
-                        int numEnemiesToAttack = 2;  // 랜덤으로 선택할 적의 수
-
-                        for (int i = 0; i < numEnemiesToAttack; i++)
+                        for (int i = 0; i < 2; i++)
                         {
-                            int randomEnemyIndex = RandomMonsterIndex(monsterCount);
-                            _playerDamage = PlayerDamage(_player.Atk * 1.5f + Item.AtkBonus, out atkType);
-                            _monsters[randomEnemyIndex].TakeDamage(_playerDamage);
-                            _monsterIdx = randomEnemyIndex;
+                            int randomMonsterIndex = RandomMonsterIndex(isMonsterAlive);
 
-                            scene = Scene.playerEnd;
+                            if (randomMonsterIndex == -1)
+                            {
+                                WriteLine("더 이상 공격할 몬스터가 없습니다.");
+                                scene = Scene.playerSkill;
+                                break;
+                            }
+
+                            _playerDamage = (int)(_player.Atk * 1.5f + Item.AtkBonus);
+                            _monsters[randomMonsterIndex].TakeDamage(_playerDamage);
+                            _monsterIdx = randomMonsterIndex;
+
+                            isMonsterAlive[randomMonsterIndex] = !_monsters[randomMonsterIndex].IsDead;
                         }
+
                         _player.MP -= 15;
+                        scene = Scene.playerEnd;
                     }
                     else
                     {
-                        WriteLine(" MP가 부족합니다.");
-                        WriteLine(" 0. 돌아가기");
+                        WriteLine("MP가 부족합니다.");
+                        WriteLine("0. 돌아가기");
                         CheckValidInput(0, 0);
                         scene = Scene.playerSkill;
                     }
@@ -379,11 +392,63 @@ namespace Team01DungeonGame
             return scene;
         }
 
-        private int RandomMonsterIndex(int monsterCount)  //임의로 작성한 스킬랜덤지정 메소드
+        private int RandomMonsterIndex(bool[] isMonsterAlive)
         {
             Random random = new Random();
-            return random.Next(0, monsterCount);
+
+            if (!isMonsterAlive.Any(alive => alive))
+            {
+                return -1;
+            }
+            int randomIndex;
+            do
+            {
+                randomIndex = random.Next(isMonsterAlive.Length);
+            } while (!isMonsterAlive[randomIndex]);
+
+            return randomIndex;
         }
+
+
+
+
+
+
+        //if (_player.MP >= 10)
+        //{
+        //    int numEnemiesToAttack = 2;  // 랜덤으로 선택할 적의 수
+        //    bool[] isMonsterAlive = new bool[_monsters.Length];
+
+        //    for(int j=0; j<_monsters.Length; j++)
+        //    {
+        //        isMonsterAlive[j] = true;
+        //    }
+
+
+        //    for (int i = 0; i < numEnemiesToAttack; i++)
+        //    {
+        //        int randomEnemyIndex = RandomMonsterIndex(isMonsterAlive);
+        //        _playerDamage = PlayerDamage(_player.Atk * 1.5f + Item.AtkBonus, out atkType);
+        //        _monsters[randomEnemyIndex].TakeDamage(_playerDamage);
+        //        _monsterIdx = randomEnemyIndex;
+        //    }
+        //    scene = Scene.playerEnd;
+        //    _player.MP -= 15;
+        //}
+        //else
+        //{
+        //    WriteLine(" MP가 부족합니다.");
+        //    WriteLine(" 0. 돌아가기");
+        //    CheckValidInput(0, 0);
+        //    scene = Scene.playerSkill;
+        //}
+
+
+
+
+
+
+
 
         private Scene HealingScene()
         {
