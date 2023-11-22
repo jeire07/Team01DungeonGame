@@ -491,11 +491,11 @@ namespace Team01DungeonGame
             WriteLine($" 2. 명상   (마나): {_player.MP} / {_player.MaxMP + Item.MPBonus}");
             WriteLine($" 3. 팔굽혀펴기 (공격력): {_player.Atk + Item.AtkBonus}");
             WriteLine($" 4. 맷집 단련  (방어력): {_player.Def + Item.DefBonus}");
-            WriteLine("");
+            WriteLine();
             PrintColoredText(" 5. 비법 전수");
-            WriteLine("");
+            WriteLine();
             WriteLine(" 원하시는 운동을 선택해주세요.");
-            WriteLine("");
+            WriteLine();
             WriteLine(" 0. 나가기");
             WriteLine();
             int userInput = CheckValidInput(0, 5);
@@ -623,11 +623,11 @@ namespace Team01DungeonGame
             PrintColoredText(" 비법 전수");
             WriteLine();
             PrintwithColoredText(" ", "500", " G 를 내면 트레이너가 비법을 전수해 줄 것입니다.");
-            WriteLine("비법을 전수 받으면 효과가 랜덤할 수 있습니다.");
+            WriteLine(" 비법을 전수 받으면 효과가 랜덤할 수 있습니다.");
             PrintwithColoredText(" (보유 골드 : ", $"{_player.Gold}", " G)");
             WriteLine();
 
-            WriteLine($" 1. 물은 답을 알고있다. (체력) : {_player.HP} / {_player.MaxHP + Item.HPBonus}");
+            WriteLine($" 1. 물은 답을 알고 있다. (체력) : {_player.HP} / {_player.MaxHP + Item.HPBonus}");
             WriteLine($" 2. 수학의 정석 (마나) : {_player.MP} / {_player.MaxMP + Item.MPBonus}");
             WriteLine($" 3. 법전 (공격력) : {_player.Atk + Item.AtkBonus}");
             WriteLine($" 4. 자기 방어술 (방어력) : {_player.Def + Item.DefBonus}");
@@ -654,7 +654,7 @@ namespace Team01DungeonGame
 
                         Clear();
                         WriteLine();
-                        WriteLine("물은 답을 알고있는것 같다. 숨이 막힌다.");
+                        WriteLine(" 물은 답을 알고 있는 것 같다. 숨이 막힌다.");
                         WriteLine($" 체력이 {randNum} 강화됐다!");
                         WriteLine();
                         WriteLine(" 0. 다음");
@@ -681,7 +681,7 @@ namespace Team01DungeonGame
                         _player.Gold -= 500;
                         Clear();
                         WriteLine();
-                        WriteLine("뭐라 적혀 있는지 모르겠지만 머리가 똑똑해진것 같습니다.");
+                        WriteLine(" 뭐라 적혀 있는지 모르겠지만 머리가 똑똑해진 것 같습니다.");
                         WriteLine($" 마나가 {randNum} 강화됐다!");
                         WriteLine();
                         WriteLine(" 0. 다음");
@@ -706,8 +706,8 @@ namespace Team01DungeonGame
                         _player.Atk += randNum;
                         _player.Gold -= 500;
                         Clear();
-                        WriteLine("");
-                        WriteLine("책 모서리가 이렇게 아픈줄 몰랐다.");
+                        WriteLine();
+                        WriteLine(" 책 모서리가 이렇게 아픈줄 몰랐다.");
                         WriteLine($" 공격이 {randNum} 강화됐다!");
                         WriteLine();
                         WriteLine(" 0. 다음");
@@ -732,8 +732,8 @@ namespace Team01DungeonGame
                         _player.Def += randNum;
                         _player.Gold -= 500;
                         Clear();
-                        WriteLine("");
-                        WriteLine("싸움을 잘 할 것처럼 보이는 자세를 배웠다.");
+                        WriteLine();
+                        WriteLine(" 싸움을 잘 할 것처럼 보이는 자세를 배웠다.");
                         WriteLine($" 방어가 {randNum} 강화됐다!");
                         WriteLine();
                         WriteLine(" 0. 다음");
@@ -841,8 +841,8 @@ namespace Team01DungeonGame
             Clear();
             WriteLine();
             PrintColoredText(" 힐링 아이템");
-            WriteLine(" 포션을 사용하면 30 회복 할 수 있습니다.");
-            WriteLine($" 체력 포션 {countHP} 개 / 마나 포션 {countMP}");
+            WriteLine(" 포션을 사용하면 30 회복할 수 있습니다.");
+            WriteLine($" 체력 포션 {countHP} 개 / 마나 포션 {countMP} 개");
             WriteLine();
             WriteLine($" 체력: {_player.HP} / {_player.MaxHP + Item.HPBonus}");
             WriteLine($" 마나: {_player.MP} / {_player.MaxMP + Item.MPBonus}");

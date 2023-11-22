@@ -416,7 +416,7 @@ namespace Team01DungeonGame
             WriteLine();
             PrintColoredText(" 힐링 아이템");
             WriteLine(" 전투중에 포션을 사용하면 내 턴을 소비해서 30 포인트 회복 할 수 있습니다.");
-            WriteLine($" 체력 포션 {countHP} 개 / 마나 포션 {countMP}");
+            WriteLine($" 체력 포션 {countHP} 개 / 마나 포션 {countMP} 개");
             WriteLine();
             WriteLine($" 체력: {_player.HP} / {_player.MaxHP + Item.HPBonus}");
             WriteLine($" 마나: {_player.MP} / {_player.MaxMP + Item.MPBonus}");
@@ -607,7 +607,7 @@ namespace Team01DungeonGame
             WriteLine($" 골드: + {_monsters.Count * Stage * 5} (보유중: {_player.Gold})");
             _player.GetExp(_monsters.Count * Stage);
 
-            WriteLine("");
+            WriteLine();
             WriteLine(" 0. 다음");
 
             CheckValidInput(0, 0);
@@ -643,9 +643,9 @@ namespace Team01DungeonGame
             Scene scene = Scene.exitDungeon;
 
             Clear();
-            WriteLine("");
+            WriteLine();
             PrintColoredText($" {_player.Name}은/는 무사히 도망쳤다.");
-            WriteLine("");
+            WriteLine();
             WriteLine(" 0. 다음");
 
             CheckValidInput(0, 0);
