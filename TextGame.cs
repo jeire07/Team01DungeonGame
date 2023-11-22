@@ -600,11 +600,11 @@ namespace Team01DungeonGame
             WriteLine($" 4. 방어: {_player.Def + Item.DefBonus}");
             WriteLine("");
             PrintColoredText(" 5. 인생역전의 기회");
-            WriteLine();
+            WriteLine("");
             WriteLine(" 강화하고 싶은 스탯을 선택해주세요.");
-            WriteLine();
+            WriteLine("");
             WriteLine(" 0. 나가기");
-            WriteLine();
+            WriteLine("");
 
             int userInput = CheckValidInput(0, 5);
             
