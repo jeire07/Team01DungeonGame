@@ -80,7 +80,7 @@ namespace Team01DungeonGame
             WriteLine();
             WriteLine(" 이 세상을 살아가기 위해선 몸이 필요합니다.");
             WriteLine();
-            WriteLine(" 1. 거지     : 가진게 없어요.");
+            WriteLine(" 1. 거지     : 가진게 없어요");
             WriteLine();
             WriteLine(" 2. 바이킹   : 바이킹 종족의 후예");
             WriteLine();
@@ -114,6 +114,7 @@ namespace Team01DungeonGame
             _items.Add(new Item("수정 검", "수정으로 만들어진 검", EquipType.oneHand, 4, 0, 0, 20, 800));
             _items.Add(new Item("장대", "장대 높이 뛰기를 할 수 있을 것 같습니다.", EquipType.oneHand, 3, 3, 0, 0, 300));
             _items.Add(new Item("철 갑옷", "무거운 철로 만들어져 있습니다.", EquipType.oneHand, -2, 8, 0, 0, 600));
+
             _items.Add(new Item("철광석", "불순물이 섞인 철광석입니다", EquipType.material, 0, 0, 0, 0, 100, false));
             _items.Add(new Item("소다회", "각종 식물을 태운 뒤 정제한 소다회입니다", EquipType.material, 0, 0, 0, 0, 100, false));
             _items.Add(new Item("소금", "짜다!", EquipType.material, 0, 0, 0, 0, 100, false));
