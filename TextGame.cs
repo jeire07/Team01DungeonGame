@@ -106,6 +106,9 @@ namespace Team01DungeonGame
             _items.Add(new Item("벌목 도끼", "벌목할 때 쓸 수있는 도끼", EquipType.twoHand, 5, 0, 0, 0, 500));
             _items.Add(new Item("깨진 결혼 반지", "대부분 금값입니다.", EquipType.ring1, 0, 0, -10, 0, 1000));
 
+            _items.Add(new Item("체력 포션", "HP를 30 회복합니다.", EquipType.potion, 0, 0, 0, 0, 200, false));
+            _items.Add(new Item("마나 포션", "MP를 30 회복합니다.", EquipType.potion, 0, 0, 0, 0, 200, false));
+
             _items.Add(new Item("천년나무 지팡이", "ㅁㄴㅇㄹ", EquipType.twoHand, 4, 0, 0, 50, 1100));
             _items.Add(new Item("덤벨", "파워", EquipType.oneHand, 5, 0, 30, -15, 400));
             _items.Add(new Item("수정 검", "수정으로 만들어진 검", EquipType.oneHand, 4, 0, 0, 20, 800));
@@ -116,8 +119,7 @@ namespace Team01DungeonGame
             _items.Add(new Item("소다회", "각종 식물을 태운 뒤 정제한 소다회입니다", EquipType.material, 0, 0, 0, 0, 100, false));
             _items.Add(new Item("소금", "각종 식물을 태운 뒤 정제한 소다회입니다", EquipType.material, 0, 0, 0, 0, 100, false));
             _items.Add(new Item("올리브", "당신이 아는 그 올리브 열매입니다.", EquipType.material, 0, 0, 0, 0, 100, false));
-            _items.Add(new Item("체력 포션", "HP를 30 회복합니다.", EquipType.potion, 0, 0, 0, 0, 200, false));
-            _items.Add(new Item("마나 포션", "MP를 30 회복합니다.", EquipType.potion, 0, 0, 0, 0, 200, false));
+            
 
             // 상인 정보 세팅
             _merchant = new Character("jeire", JobType.human);
@@ -271,8 +273,8 @@ namespace Team01DungeonGame
             PrintwithColoredText(" 방어력 : ", (_player.Def + Item.DefBonus).ToString(), bonusDef);
             PrintwithColoredText(" 체력   : ", $"{_player.HP} / {_player.MaxHP + Item.HPBonus}", bonusHP);
             PrintwithColoredText(" 마나   : ", $"{_player.MP} / {_player.MaxMP + Item.MPBonus}", bonusMP);
-
-            PrintwithColoredText(" Gold   : ", _player.Gold.ToString(), "G");
+            PrintwithColoredText(" 경험치 : ", $"{_player.Exp} / {_player.MaxExp}");
+            PrintwithColoredText(" Gold   : ", _player.Gold.ToString(), " G");
             
             WriteLine();
             WriteLine(" 0. 나가기");
