@@ -232,18 +232,24 @@ namespace Team01DungeonGame
             WriteLine("    공격력 * 2 로 하나의 적을 공격합니다.");
             WriteLine(" 2. 더블 스트라이크 - MP 15");
             WriteLine("    공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.");
+            WriteLine(" 3. 마력 광탄 - MP 20");
+            WriteLine("    공격력 * 0.75 의 데미지로 적을 3번 공격합니다.");
+            WriteLine(" 4. 인페르노 - MP 40");
+            WriteLine("    공격력 * 1.5 로 모든 적을 2번 공격합니다.");
             WriteLine();
             WriteLine(" 0. 나가기");
             WriteLine();
             WriteLine(" 사용할 스킬을 선택해주세요.");
 
-            int actInput = CheckValidInput(0, 2);
+            int actInput = CheckValidInput(0, 4);
             switch (actInput)
             {
                 case 0:
                     scene = Scene.playerPick;
                     break;
                 case 1:
+                    WriteLine();
+                    WriteLine(" 공격할 대상을 선택해주세요.");
                     int MonsterNum = CheckMonsterInput(monsterCount);
                     switch (MonsterNum)
                     {
@@ -289,6 +295,78 @@ namespace Team01DungeonGame
                     {
                         WriteLine(" MP가 부족합니다.");
                         WriteLine(" 0. 돌아가기");
+                        CheckValidInput(0, 0);
+                        scene = Scene.playerSkill;
+                    }
+                    break;
+                case 3:
+                    if (_player.MP >= 20)
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            WriteLine();
+                            WriteLine(" 공격할 대상을 선택해주세요.");
+                            foreach (Monster checkAlive in _monsters)
+                            {
+                                if (checkAlive.IsAlive == true)
+                                {
+                                    scene = Scene.monster;
+                                    break;
+                                }
+                                else
+                                {
+                                    scene = Scene.victory;
+                                }
+                            }
+                            MonsterNum = CheckMonsterInput(monsterCount);
+                            if (MonsterNum == 0)
+                            {
+                                scene = Scene.playerSkill;
+                                return scene;
+                            }
+                            _playerDamage = (int)(PlayerDamage(_player.Atk + Item.AtkBonus, out atkType) * 0.75);
+                            _monsters[MonsterNum - 1].TakeDamage(_playerDamage);
+                            _monsterIdx = MonsterNum - 1;
+                        }
+                        _player.MP -= 20;
+                        scene = Scene.playerEnd;
+                    }
+                    else
+                    {
+                        WriteLine("MP가 부족합니다.");
+                        WriteLine("0. 돌아가기");
+                        CheckValidInput(0, 0);
+                        scene = Scene.playerSkill;
+                    }
+                    break;
+                case 4:
+                    if (_player.MP >= 40)
+                    {
+                        for (int i = 0; i < monsterCount; i++)
+                        {
+                            if (_monsters[i].IsAlive)
+                            {
+                                _playerDamage = (int)(_player.Atk * 1.5f + Item.AtkBonus);
+                                _monsters[i].TakeDamage(_playerDamage);
+                                _monsterIdx = i;
+                            }
+                        }
+                        for (int i = 0; i < monsterCount; i++)
+                        {
+                            if (_monsters[i].IsAlive)
+                            {
+                                _playerDamage = (int)(_player.Atk * 1.5f + Item.AtkBonus);
+                                _monsters[i].TakeDamage(_playerDamage);
+                                _monsterIdx = i;
+                            }
+                        }
+                        _player.MP -= 40;
+                        scene = Scene.playerEnd;
+                    }
+                    else
+                    {
+                        WriteLine("MP가 부족합니다.");
+                        WriteLine("0. 돌아가기");
                         CheckValidInput(0, 0);
                         scene = Scene.playerSkill;
                     }
