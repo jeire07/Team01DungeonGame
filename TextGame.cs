@@ -924,6 +924,11 @@ namespace Team01DungeonGame
             Scene scene = Scene.main;
             Clear();
 
+            if (_player.Job == JobType.developer)
+            {
+                _stage = 1000;
+            }
+
             WriteLine();
             PrintColoredText(" 던전 포탈 난이도 설정");
             WriteLine();
@@ -931,6 +936,8 @@ namespace Team01DungeonGame
             WriteLine();
             WriteLine(" 던전 난이도를 입력해주세요");
             WriteLine(" 현재 선택 가능 난이도: 1 ~ {0}", _stage);
+
+            
 
             int userInput = CheckValidInput(0, _stage);
 
