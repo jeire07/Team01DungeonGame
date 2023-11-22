@@ -74,9 +74,8 @@ namespace Team01DungeonGame
             }
         }
 
-        public int PlayBattle(int stage)
+        public int PlayBattle()
         {
-            Stage = stage;
             _enterHP = _player.HP;
             Scene scene = Scene.playerPick;
             while (scene != Scene.exitDungeon)
