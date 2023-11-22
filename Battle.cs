@@ -523,9 +523,14 @@ namespace Team01DungeonGame
             WriteLine(" HP {0} -> {1}", _enterHP, _player.HP);
             WriteLine();
             WriteLine($" 경험치: + {_monsters.Count * Stage} ");
+            _player.Gold += _monsters.Count * Stage * 5;
+            WriteLine($" 골드: + {_monsters.Count * Stage * 5} (보유중: {_player.Gold })");
+
             _player.GetExp(_monsters.Count * Stage);
+
             WriteLine("");
             WriteLine(" 0. 다음");
+            WriteLine("");
 
             
 
