@@ -15,7 +15,6 @@ namespace Team01DungeonGame
         public int MaxHP { get; set; }
         public int Gold { get; set; }
         public bool IsAlive { get; set; }
-        public bool IsTurn { get; set; }
 
 
         public Monster(int level, MonsterType job)
