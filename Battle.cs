@@ -20,9 +20,13 @@ namespace Team01DungeonGame
         private int _monsterIdx { get; set; }
         private int Length { get; }
 
+
         private AtkEffect atkType = AtkEffect.normal;
         private int _enterHP;
-        
+
+
+
+
 
         public Battle(int stage, Character player)
         {
@@ -298,7 +302,8 @@ namespace Team01DungeonGame
                             _monsters[randomMonsterIndex].TakeDamage(_playerDamage);
                             _monsterIdx = randomMonsterIndex;
 
-                            isMonsterAlive[randomMonsterIndex] = !_monsters[randomMonsterIndex].IsDead;
+                            isMonsterAlive[randomMonsterIndex] = !_monsters[randomMonsterIndex].IsAlive;
+
                         }
 
                         _player.MP -= 15;
@@ -408,45 +413,6 @@ namespace Team01DungeonGame
 
             return randomIndex;
         }
-
-
-
-
-
-
-        //if (_player.MP >= 10)
-        //{
-        //    int numEnemiesToAttack = 2;  // 랜덤으로 선택할 적의 수
-        //    bool[] isMonsterAlive = new bool[_monsters.Length];
-
-        //    for(int j=0; j<_monsters.Length; j++)
-        //    {
-        //        isMonsterAlive[j] = true;
-        //    }
-
-
-        //    for (int i = 0; i < numEnemiesToAttack; i++)
-        //    {
-        //        int randomEnemyIndex = RandomMonsterIndex(isMonsterAlive);
-        //        _playerDamage = PlayerDamage(_player.Atk * 1.5f + Item.AtkBonus, out atkType);
-        //        _monsters[randomEnemyIndex].TakeDamage(_playerDamage);
-        //        _monsterIdx = randomEnemyIndex;
-        //    }
-        //    scene = Scene.playerEnd;
-        //    _player.MP -= 15;
-        //}
-        //else
-        //{
-        //    WriteLine(" MP가 부족합니다.");
-        //    WriteLine(" 0. 돌아가기");
-        //    CheckValidInput(0, 0);
-        //    scene = Scene.playerSkill;
-        //}
-
-
-
-
-
 
 
 
