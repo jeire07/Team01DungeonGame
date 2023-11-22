@@ -471,6 +471,7 @@ namespace Team01DungeonGame
                     int damage = range.Next(minDamage, maxDamage);
                     damage = _player.TakeDamage(damage);
 
+                    WriteLine("");
                     WriteLine(" Battle!!");
                     WriteLine();
                     WriteLine($" Lv.{monster.Level} {monster.Name} 의 공격!");
@@ -481,6 +482,7 @@ namespace Team01DungeonGame
                     WriteLine($" HP {_player.HP + damage} -> {_player.HP}");
                     WriteLine();
                     WriteLine(" 0. 다음");
+                    WriteLine("");
                     Write(" >> ");
 
                     CheckValidInput(0, 0);
@@ -644,6 +646,7 @@ namespace Team01DungeonGame
         {
             while (true)
             {
+                WriteLine("");
                 Write(" ");
                 string input = ReadLine();
 
@@ -654,6 +657,7 @@ namespace Team01DungeonGame
                         return ret;
                     else
                     {
+                        WriteLine("");
                         WriteLine(" 잘못된 입력입니다. 다시 입력해주세요");
                     }
                 }

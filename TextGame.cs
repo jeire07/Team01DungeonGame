@@ -38,13 +38,14 @@ namespace Team01DungeonGame
 
             Clear();
 
-            WriteLine();
+            WriteLine("");
             WriteLine(" 완제품이 없는 세상에 오신 것을 환영합니다.");
-            WriteLine();
+            WriteLine("");
 
             while (!ValidName)
             {
                 WriteLine(" 당신의 이름은 무엇입니까?");
+                WriteLine("");
                 Write(" ");
                 userName = ReadLine() ?? "jeire";
                 if (userName.Length < 9)
@@ -60,6 +61,7 @@ namespace Team01DungeonGame
                 }
             }
 
+            WriteLine("");
             WriteLine(" 어떤 직업을 하실랍니까?");
             WriteLine();
             WriteLine(" 1. 무직");
@@ -543,15 +545,16 @@ namespace Team01DungeonGame
             PrintColoredText(" 힐링 아이템");
             WriteLine(" 포션을 사용하면 30 회복 할 수 있습니다.");
             WriteLine($" 체력 포션 {countHP} 개 / 마나 포션 {countMP}");
-            WriteLine();
+            WriteLine("");
             WriteLine($" 체력: {_player.HP} / {_player.MaxHP + Item.HPBonus}");
             WriteLine($" 마나: {_player.MP} / {_player.MaxMP + Item.MPBonus}");
-            WriteLine();
+            WriteLine("");
             WriteLine(" 1. 체력 포션");
             WriteLine(" 2. 마나 포션");
             WriteLine(" 0. 나가기");
-            WriteLine();
+            WriteLine("");
             WriteLine(" 원하시는 행동을 입력해주세요.");
+            WriteLine("");
 
             switch (CheckValidInput(0, 2))
             {
@@ -756,11 +759,11 @@ namespace Team01DungeonGame
             WriteLine($" 2. 마나: {_player.MP} / {_player.MaxMP + Item.MPBonus}");
             WriteLine($" 3. 공격: {_player.Atk + Item.AtkBonus}");
             WriteLine($" 4. 방어: {_player.Def + Item.DefBonus}");
-            WriteLine();
+            WriteLine("");
             WriteLine(" 인생역전 하고싶은 스탯을 선택해주세요.");
-            WriteLine();
+            WriteLine("");
             WriteLine(" 0. 나가기");
-            WriteLine();
+            WriteLine("");
 
             Random random = new Random();
             int randNum = random.Next(1, 10);
@@ -899,12 +902,12 @@ namespace Team01DungeonGame
             Scene scene = Scene.main;
             Clear();
 
-            WriteLine();
+            WriteLine("");
             PrintColoredText(" 이곳은 던전의 입구입니다");
-            WriteLine();
+            WriteLine("");
             WriteLine(" 1. 입장하기");
             WriteLine(" 0. 나가기");
-            WriteLine();
+            WriteLine("");
             WriteLine(" 원하시는 행동을 입력해주세요.");
 
             switch (CheckValidInput(0, 1))
@@ -963,6 +966,7 @@ namespace Team01DungeonGame
         {
             while (true)
             {
+                WriteLine("");
                 Write(" ");
                 string input = ReadLine();
 
@@ -973,6 +977,7 @@ namespace Team01DungeonGame
                         return ret;
                     else
                     {
+                        WriteLine("");
                         WriteLine(" 잘못된 입력입니다. 다시 입력해주세요");
                     }
                 }
@@ -984,6 +989,7 @@ namespace Team01DungeonGame
                     }
                     else
                     {
+                        WriteLine("");
                         WriteLine(" 잘못된 입력입니다. 다시 입력해주세요");
                     }
                 }
