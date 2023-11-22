@@ -42,13 +42,23 @@ namespace Team01DungeonGame
             Clear();
 
             WriteLine();
-            WriteLine("       ==============");
-            WriteLine("         환영합니다. ");
-            WriteLine("       ==============");
-            WriteLine();
+            WriteLine("     ================================================================");
+            WriteLine("        __                  ___                                    \r");
+            WriteLine("       /__\\_ _ ___ _   _   /   \\_   _ _ __   __ _  ___  ___  _ __  \r");
+            WriteLine("      /_\\/ _` / __| | | | / /\\ / | | | '_ \\ / _` |/ _ \\/ _ \\| '_ \\ \r");
+            WriteLine("     //_| (_| \\__ \\ |_| |/ /_//| |_| | | | | (_| |  __/ (_) | | | |\r");
+            WriteLine("     \\__/\\__,_|___/\\__, /___,'  \\__,_|_| |_|\\__, |\\___|\\___/|_| |_|\r");
+            WriteLine("                   |___/                    |___/                  ");
+            WriteLine("     ================================================================");
+            WriteLine("                             Press Any Button                        ");
+            ReadKey();
 
+            Clear();
             while (!ValidName)
             {
+                WriteLine();
+                WriteLine(" 환영합니다.");
+                WriteLine();
                 WriteLine(" 당신의 이름은 무엇입니까?");
                 Write(" ");
                 WriteLine();
