@@ -959,7 +959,7 @@ namespace Team01DungeonGame
                     break;
                 default:
                     Battle battle = new Battle(userInput, _player);
-                    _stage = battle.PlayBattle(_stage);
+                    _stage = battle.PlayBattle();
                     scene = Scene.dungeon;
                     break;
             }
