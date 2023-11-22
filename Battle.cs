@@ -389,7 +389,9 @@ namespace Team01DungeonGame
             Scene scene = Scene.monster;
             Clear();
 
-            WriteLine();
+            WriteLine("");
+            WriteLine("==============================================================");
+            WriteLine("");
             PrintColoredText(" Battle!!");
             WriteLine();
 
@@ -430,7 +432,10 @@ namespace Team01DungeonGame
             WriteLine($" Lv.{monster.Level} {monster.Name}");
             WriteLine($" {monster.Def} 방어");
             WriteLine($" HP {monster.HP + _playerDamage} -> {monster.HP}");
-            WriteLine();
+            WriteLine("");
+            WriteLine("==============================================================");
+            WriteLine("");
+
             _playerDamage = 0;
 
             foreach (Monster checkAlive in _monsters)
@@ -473,7 +478,7 @@ namespace Team01DungeonGame
 
                     WriteLine("==============================================================");
                     WriteLine("");
-                    WriteLine(" Battle!!");
+                    PrintColoredText(" Battle!!");
                     WriteLine();
                     WriteLine($" Lv.{monster.Level} {monster.Name} 의 공격!");
                     WriteLine($" {_player.Name} 을(를) 맞췄습니다.  [데미지 : {_player.Def+damage}]");
