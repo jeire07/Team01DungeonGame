@@ -1,4 +1,5 @@
-﻿using static System.Console;
+﻿using System.Xml.Linq;
+using static System.Console;
 
 namespace Team01DungeonGame
 {
@@ -10,25 +11,26 @@ namespace Team01DungeonGame
 
     public class Item
     {
-        public string Name { get; }
-        public string Description { get; }
-        public EquipType Type { get; }
-        public int Atk { get; }
-        public int Def { get; }
-        public int HP { get; }
-        public int Cost { get; }
-        public bool Equipable { get; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public EquipType Type { get; set; }
+        public int Atk { get; set; }
+        public int Def { get; set; }
+        public int HP { get; set; }
+        public int MP { get; set; }
+        public int Cost { get; set; }
+        public bool Equipable { get; set; }
         public bool IsEquipped { get; set; }
         public int ItemCount { get; set; }
+
         public static int AtkBonus { get; set; }
         public static int DefBonus { get; set; }
         public static int HPBonus { get; set; }
         public static int MPBonus { get; set; }
 
         public Item(string name, string description, EquipType type,
-            int atk, int def, int hp, int gold,
-            bool equipable = true, bool equipped = false, int count = 1,
-            int atkBonus = 0, int defBonus = 0, int hpBonus = 0)
+            int atk, int def, int hp, int mp, int gold,
+            bool equipable = true, bool isEquipped = false, int itemCount = 1)
         {
             Name = name;
             Description = description;
@@ -36,13 +38,20 @@ namespace Team01DungeonGame
             Atk = atk;
             Def = def;
             HP = hp;
+            MP = mp;
             Cost = gold;
             Equipable = equipable;
-            IsEquipped = equipped;
-            ItemCount = count;
-            AtkBonus = atkBonus;
-            DefBonus = defBonus;
-            HPBonus = hpBonus;
+            IsEquipped = isEquipped;
+            ItemCount = itemCount;
+        }
+
+        public Item DeepCopy()
+        {
+            Item item = new Item(this.Name, this.Description, this.Type,
+                                 this.Atk, this.Def, this.HP, this.MP, this.Cost,
+                                 this.Equipable, this.IsEquipped, this.ItemCount);
+            
+            return item;
         }
 
         public void ItemInfo(bool withNumber = false, int idx = 0)
@@ -61,23 +70,24 @@ namespace Team01DungeonGame
                 Write("E");
                 ResetColor();
                 Write("] ");
-                Write(PadRightText($"{Name}", 15));
+                Write(PadRightText($"{Name}", 17));
             }
             else
             {
-                Write(PadRightText($"     {Name}", 20));
+                Write(PadRightText($"     {Name}", 22));
             }
-            Write(PadRightStat("Atk", Atk, "", 10));
-            Write(PadRightStat("Def", Def, "", 10));
-            Write(PadRightStat("HP", HP, "", 10));
-            Write(PadRightStat("", ItemCount, "개", 10));
-            Write(PadRightStat("", Cost, " G", 12));
+            Write(PadRightStat("Atk ", Atk, "", 10));
+            Write(PadRightStat("Def ", Def, "", 10));
+            Write(PadRightStat("HP ", HP, "", 10));
+            Write(PadRightStat("MP ", MP, "", 10));
+            Write(PadRightStat("", ItemCount, "개", 8));
+            Write(PadRightStat("", Cost, " G", 11));
             WriteLine($" | {Description}");
         }
 
         public string PadRightStat(string text1, int value, string text2, int length)
         {
-            string text = value >= 0 ? $" | {text1} +{value}{text2}" : $" | {text1} {value}{text2}";
+            string text = value >= 0 ? $" | {text1}+{value}{text2}" : $" | {text1}{value}{text2}";
             int padding = length - PrintableLength(text);
             return text.PadRight(text.Length + padding);
         }

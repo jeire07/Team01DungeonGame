@@ -312,7 +312,7 @@ namespace Team01DungeonGame
             int countHP;
             int countMP;
 
-            int indexHP = _player.ItemIndex("체력 포션");
+            int indexHP = _player.InventoryIndex("체력 포션");
             if(indexHP >= 0)
             {
                 countHP = _player.Inventory[indexHP].ItemCount;
@@ -322,7 +322,7 @@ namespace Team01DungeonGame
                 countHP = 0;
             }
 
-            int indexMP = _player.ItemIndex("마나 포션");
+            int indexMP = _player.InventoryIndex("마나 포션");
             if(indexMP >= 0)
             {
                 countMP = _player.Inventory[indexMP].ItemCount;
@@ -363,7 +363,7 @@ namespace Team01DungeonGame
                     {
                         scene = Scene.healing;
                     }
-                    WriteLine("0. 다음");
+                    WriteLine(" 0. 다음");
                     CheckValidInput(0, 0);
                     break;
                 case 2:
@@ -377,7 +377,7 @@ namespace Team01DungeonGame
                     {
                         scene = Scene.healing;
                     }
-                    WriteLine("0. 다음");
+                    WriteLine(" 0. 다음");
                     CheckValidInput(0, 0);
                     break;
             }
@@ -389,9 +389,9 @@ namespace Team01DungeonGame
             Scene scene = Scene.monster;
             Clear();
 
-            WriteLine("");
+            WriteLine();
             WriteLine("==============================================================");
-            WriteLine("");
+            WriteLine();
             PrintColoredText(" Battle!!");
             WriteLine();
 
@@ -432,9 +432,9 @@ namespace Team01DungeonGame
             WriteLine($" Lv.{monster.Level} {monster.Name}");
             WriteLine($" {monster.Def} 방어");
             WriteLine($" HP {monster.HP + _playerDamage} -> {monster.HP}");
-            WriteLine("");
+            WriteLine();
             WriteLine("==============================================================");
-            WriteLine("");
+            WriteLine();
 
             _playerDamage = 0;
 
@@ -477,7 +477,7 @@ namespace Team01DungeonGame
                     damage = _player.TakeDamage(damage);
 
                     WriteLine("==============================================================");
-                    WriteLine("");
+                    WriteLine();
                     PrintColoredText(" Battle!!");
                     WriteLine();
                     WriteLine($" Lv.{monster.Level} {monster.Name} 의 공격!");
@@ -486,11 +486,11 @@ namespace Team01DungeonGame
                     WriteLine($" Lv.{_player.Level} {_player.Name}");
                     WriteLine($" {_player.Def} 방어, 입은 피해 : {damage}");
                     WriteLine($" HP {_player.HP + damage} -> {_player.HP}");
-                    WriteLine("");
+                    WriteLine();
                     WriteLine("==============================================================");
-                    WriteLine("");
+                    WriteLine();
                     WriteLine(" 0. 다음");
-                    WriteLine("");
+                    WriteLine();
                     Write(" >> ");
 
                     CheckValidInput(0, 0);
@@ -522,17 +522,14 @@ namespace Team01DungeonGame
             WriteLine(" Lv. {0} {1}", _player.Level, _player.Name);
             WriteLine(" HP {0} -> {1}", _enterHP, _player.HP);
             WriteLine();
+
             WriteLine($" 경험치: + {_monsters.Count * Stage} ");
             _player.Gold += _monsters.Count * Stage * 5;
-            WriteLine($" 골드: + {_monsters.Count * Stage * 5} (보유중: {_player.Gold })");
-
+            WriteLine($" 골드: + {_monsters.Count * Stage * 5} (보유중: {_player.Gold})");
             _player.GetExp(_monsters.Count * Stage);
 
             WriteLine("");
             WriteLine(" 0. 다음");
-            WriteLine("");
-
-            
 
             CheckValidInput(0, 0);
             scene = Scene.exitDungeon;
@@ -659,7 +656,7 @@ namespace Team01DungeonGame
         {
             while (true)
             {
-                WriteLine("");
+                WriteLine();
                 Write(" ");
                 string input = ReadLine();
 
@@ -670,7 +667,7 @@ namespace Team01DungeonGame
                         return ret;
                     else
                     {
-                        WriteLine("");
+                        WriteLine();
                         WriteLine(" 잘못된 입력입니다. 다시 입력해주세요");
                     }
                 }
