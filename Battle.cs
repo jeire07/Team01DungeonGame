@@ -294,6 +294,7 @@ namespace Team01DungeonGame
                     {
                         for (int i = 0; i < 2; i++)  // 2회 공격이므로 2회 반복
                         {
+                            int deathCount = 0;
                             // 생존한 몬스터가 남아있는지 확인, 1회차 공격에 남아있던 몬스터가 죽었을 수도 있으므로 확인.
                             foreach (Monster checkAlive in _monsters)
                             {
@@ -301,11 +302,17 @@ namespace Team01DungeonGame
                                 {
                                     break;
                                 }
-                                else  // 모든 몬스터가 전멸함
+                                else
                                 {
-                                    scene = Scene.playerEnd;
-                                    return scene;
+                                    deathCount++;  // 몬스터 전체 수와 일치하면 모두 사망
                                 }
+                            }
+
+                            // 모든 몬스터가 전멸함
+                            if(deathCount == _monsters.Count)
+                            {
+                                scene = Scene.playerEnd;
+                                return scene;
                             }
 
                             // 살아남은 몬스터가 있기에 공격 진행 ( 대상 몬스터 무작위 선택 )
@@ -338,24 +345,31 @@ namespace Team01DungeonGame
                     {
                         for (int i = 0; i < 3; i++)
                         {
-                            // 생존한 몬스터가 있는지 검사
+                            int deathCount = 0;
+                            // 생존한 몬스터가 남아있는지 확인, 1회차 공격에 남아있던 몬스터가 죽었을 수도 있으므로 확인.
                             foreach (Monster checkAlive in _monsters)
                             {
-                                if (checkAlive.IsAlive == true)
+                                if (checkAlive.IsAlive == true)  // 살아남은 몬스터가 있음
                                 {
                                     break;
                                 }
                                 else
                                 {
-                                    scene = Scene.playerEnd;
-                                    return scene;
+                                    deathCount++;  // 몬스터 전체 수와 일치하면 모두 사망
                                 }
+                            }
+
+                            // 모든 몬스터가 전멸함
+                            if (deathCount == _monsters.Count)
+                            {
+                                scene = Scene.playerEnd;
+                                return scene;
                             }
 
                             WriteLine();
                             WriteLine(" 공격할 대상을 선택해주세요.");
 
-                            input = CheckMonsterInput(monsterCount);
+                            input = SkillTargetInput(monsterCount);
 
                             _hitMonsters.Add(input - 1);  // 공격당한 몬스터가 누구인지 기록
                             _hitMonstersHP.Add(_monsters[input - 1].HP);  // 공격당한 몬스터의 원래 HP 기록
@@ -748,6 +762,39 @@ namespace Team01DungeonGame
                     else if (_monsters[ret - 1].IsAlive)
                     {
                         return ret;
+                    }
+                    else
+                    {
+                        WriteLine();
+                        WriteLine(" 이미 죽은 녀석입니다.");
+                    }
+                }
+            }
+        }
+
+        private int SkillTargetInput(int max)
+        {
+            while (true)
+            {
+                WriteLine();
+                Write(" >> ");
+                string input = ReadLine();
+
+                bool parseSuccess = int.TryParse(input, out var ret);
+                if (parseSuccess)
+                {
+                    if (ret > _monsters.Count || ret <= 0)
+                    {
+                        WriteLine();
+                        WriteLine(" 잘못된 입력입니다. 다시 입력해주세요");
+                    }
+                    else if (_monsters[ret - 1].IsAlive)
+                    {
+                        return ret;
+                    }
+                    else
+                    {
+                        WriteLine(" 해당 몬스터는 더 공격하지 않아도 사망할 것 같습니다");
                     }
                 }
             }
