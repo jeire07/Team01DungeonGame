@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using static System.Console;
+﻿using static System.Console;
 
 namespace Team01DungeonGame
 {
@@ -794,7 +793,7 @@ namespace Team01DungeonGame
                     }
                     else
                     {
-                        WriteLine(" 해당 몬스터는 더 공격하지 않아도 사망할 것 같습니다");
+                        WriteLine(" 이미 죽은 녀석입니다.");
                     }
                 }
             }
@@ -842,15 +841,6 @@ namespace Team01DungeonGame
         /// </summary>
         /// <param name="atk">monster's atk field value</param>
         /// <returns></returns>
-        private int MonsterDamage(int atk)
-        {
-            int minDamage = (int)Math.Ceiling(atk * 0.9f);
-            int maxDamage = (int)Math.Ceiling(atk * 1.1f);
-
-            Random range = new Random();
-            int damage = range.Next(minDamage, maxDamage);
-            return damage;
-        }
 
         private int CheckValidInput(int min, int max)
         {
